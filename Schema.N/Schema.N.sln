@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonVersionDeserialization", "JsonVersionDeserialization\JsonVersionDeserialization.csproj", "{AB6DC401-7C95-486A-841C-B05A36B014A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{A0105C77-9ECC-44B5-9DCF-789BCA9D15CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AB6DC401-7C95-486A-841C-B05A36B014A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB6DC401-7C95-486A-841C-B05A36B014A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB6DC401-7C95-486A-841C-B05A36B014A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0105C77-9ECC-44B5-9DCF-789BCA9D15CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0105C77-9ECC-44B5-9DCF-789BCA9D15CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0105C77-9ECC-44B5-9DCF-789BCA9D15CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0105C77-9ECC-44B5-9DCF-789BCA9D15CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
