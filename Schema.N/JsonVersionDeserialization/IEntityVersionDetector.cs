@@ -4,6 +4,6 @@ namespace JsonVersionDeserialization
 {
     public interface IEntityVersionDetector
     {
-        string GetEntityVersion(JToken json);
+        int GetEntityVersion(JObject json);
     }
 }

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace JsonVersionDeserialization
 {
-    public interface IEntityVersionDeserialization
+    public interface IVersionResponseWrapper<TEntity>
     {
-        object Deserialize(JObject json);
+        TEntity Entity { get; set; }
 
-        Type GetEntityType();
+        int EntityVersion { get; set; }
+
+        Type EntityType { get; set; }
     }
 }

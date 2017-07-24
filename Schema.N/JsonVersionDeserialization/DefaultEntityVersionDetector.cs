@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 
 namespace JsonVersionDeserialization
 {
@@ -11,9 +12,16 @@ namespace JsonVersionDeserialization
             VersionKey = versionKey;
         }
 
-        public string GetEntityVersion(JToken json)
+        public int GetEntityVersion(JObject json)
         {
-            return json.Value<int?>(VersionKey)?.ToString();
+            var entityVersion = json.Value<int?>(VersionKey);
+
+            if (!entityVersion.HasValue)
+            {
+                throw new ArgumentException($"Json provided did not have {VersionKey} property that was a valid int.");
+            }
+
+            return entityVersion.Value;
         }
     }
 }

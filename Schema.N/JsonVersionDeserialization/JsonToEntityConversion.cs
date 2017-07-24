@@ -5,24 +5,24 @@ namespace JsonVersionDeserialization
 {
     public class JsonToEntityConversion
     {
-        public IReadOnlyDictionary<string, IEntityVersionDeserialization> ReadOnlyVersionToDeserializerRegistry => VersionToDeserializerRegistry;
+        public IReadOnlyDictionary<int, IEntityVersionDeserialization> ReadOnlyVersionToDeserializerRegistry => VersionToDeserializerRegistry;
 
         public IEntityVersionDetector VersionDetector { get; set; }
 
-        private Dictionary<string, IEntityVersionDeserialization> VersionToDeserializerRegistry { get; }
+        private Dictionary<int, IEntityVersionDeserialization> VersionToDeserializerRegistry { get; }
 
         public JsonToEntityConversion()
         {
             VersionDetector = new DefaultEntityVersionDetector("SchemanVersion");
-            VersionToDeserializerRegistry = new Dictionary<string, IEntityVersionDeserialization>();
+            VersionToDeserializerRegistry = new Dictionary<int, IEntityVersionDeserialization>();
         }
 
-        public void RegisterDeserializer(string id, IEntityVersionDeserialization deserializer)
+        public void RegisterDeserializer(int id, IEntityVersionDeserialization deserializer)
         {
             VersionToDeserializerRegistry[id] = deserializer;
         }
 
-        public void RegisterDefaultDeserializer<TEntity>(string id)
+        public void RegisterDefaultDeserializer<TEntity>(int id)
         {
             VersionToDeserializerRegistry[id] = new DefaultEntityVersionDeserialization<TEntity>();
         }
@@ -32,11 +32,19 @@ namespace JsonVersionDeserialization
             VersionDetector = versionDetector;
         }
 
-        public object DeserializeJsonToEntityVersion(JToken json)
+        public IVersionResponseWrapper<object> DeserializeJsonToEntityVersion(JObject json)
         {
             var version = VersionDetector.GetEntityVersion(json);
             var deserializer = VersionToDeserializerRegistry[version];
-            return deserializer.Deserialize(json);
+
+            var response = new VersionResponseWrapper<object>
+            {
+                Entity = deserializer.Deserialize(json),
+                EntityVersion = version,
+                EntityType = deserializer.GetEntityType()
+            };
+
+            return response;
         }
     }
-}
+//}
