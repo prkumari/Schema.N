@@ -1,7 +1,0 @@
-﻿{
-	"Id": 1,
-	"FirstName": "Priya",
-	"LastName": "Kumari",
-	"DoB": "1989-02-01",
-	"SchemanVersion": 2
-}

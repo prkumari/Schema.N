@@ -52,5 +52,25 @@ namespace UnitTestProject
             Assert.AreEqual(v1Entity.EntityType, typeof (PersonV1));
             Assert.AreEqual(v2Entity.EntityType, typeof (PersonV2));
         }
+
+        [TestMethod]
+        public void ConvertBasic()
+        {
+            var jsonV1Text = File.ReadAllText(@"PV1.txt");
+            var jsonV2Text = File.ReadAllText(@"PV2.txt");
+
+            var jc = new JsonConvertor();
+            var r = new JsonConvertorRule()
+            {
+                Operation = JsonConvertorRuleType.Rename,
+                TargetPath = "Name",
+                Value = "awesome"
+            };
+
+            var rules = new List<JsonConvertorRule>();
+            rules.Add(r);
+            var result = jc.ConvertTo(jsonV1Text, jsonV2Text, rules);
+            
+        }
     }
 }
