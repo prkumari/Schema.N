@@ -13,8 +13,13 @@ namespace TestProject
     {
         public static void Main(string[] args)
         {
-            var jsonV1Text = File.ReadAllText(@"C:\hackathon\Schema.N\Schema.N\TestProject\PV1.txt");
-            var jsonV2Text = File.ReadAllText(@"C:\hackathon\Schema.N\Schema.N\TestProject\PV2.txt");
+            var intsList = new List<int> {1, 2, 3, 4, 5};
+
+            var x1 = intsList.OfType<int?>().FirstOrDefault(x => x == 3);
+            var x2 = intsList.OfType<int?>().FirstOrDefault(x => x == 7);
+
+            var jsonV1Text = File.ReadAllText(@"E:\Hackathon\Git\Schema.N\Schema.N\TestProject\PV1.txt");
+            var jsonV2Text = File.ReadAllText(@"E:\Hackathon\Git\Schema.N\Schema.N\TestProject\PV2.txt");
 
             var jtokenV1 = JObject.Parse(jsonV1Text);
             var jtokenV2 = JObject.Parse(jsonV2Text);
@@ -45,8 +50,46 @@ namespace TestProject
             entityConversion.RegisterDefaultDeserializer<PersonV1>(1);
             entityConversion.RegisterDefaultDeserializer<PersonV2>(2);
 
-            var v1Entity = entityConversion.DeserializeJsonToEntityVersion(jtokenV1);
-            var v2Entity = entityConversion.DeserializeJsonToEntityVersion(jtokenV2);
+            entityConversion.RegisterVersionConversion<PersonV1, PersonV2>(1, 2, ConvertPersonV1ToV2);
+            entityConversion.RegisterVersionConversion<PersonV2, PersonV3>(2, 3, ConvertPersonV2ToV3);
+
+            var v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jtokenV1);
+
+            var finalResult = entityConversion.DeserializeAndConvertToLatestVersion(jtokenV1);
+
+
+
+
+            var v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jtokenV2);
+        }
+
+        private static DataVersionInfo<JObject, PersonV2> ConvertPersonV1ToV2(DataVersionInfo<JObject, PersonV1> startData)
+        {
+            var namesplits = startData.Poco.Name.Split(' ');
+
+            var newperson = new PersonV2
+            {
+                Id = startData.Poco.Id,
+                FirstName = namesplits[0],
+                LastName = namesplits.Length > 1 ? string.Join(" ", namesplits.Skip(1)) : null,
+                DoB = null
+            };
+
+            return new DataVersionInfo<JObject, PersonV2>(JObject.FromObject(newperson), newperson);
+        }
+
+        private static DataVersionInfo<JObject, PersonV3> ConvertPersonV2ToV3(DataVersionInfo<JObject, PersonV2> startData)
+        {
+            var newperson = new PersonV3
+            {
+                Id = startData.Poco.Id,
+                FirstName = startData.Poco.FirstName,
+                LastName = startData.Poco.LastName,
+                DoB = startData.Poco.DoB,
+                PowerLevel = null
+            };
+
+            return new DataVersionInfo<JObject, PersonV3>(JObject.FromObject(newperson), newperson);
         }
     }
 }

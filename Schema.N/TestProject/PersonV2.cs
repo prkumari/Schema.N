@@ -14,6 +14,6 @@ namespace TestProject
 
         public string LastName { get; set; }
 
-        public DateTime DoB { get; set; }
+        public DateTime? DoB { get; set; }
     }
 }

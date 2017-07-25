@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JsonVersionDeserialization</RootNamespace>
-    <AssemblyName>JsonVersionDeserialization</AssemblyName>
+    <AssemblyName>Schema.N</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -45,15 +45,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompositeVersionDetector.cs" />
+    <Compile Include="DataVersionInfo.cs" />
+    <Compile Include="DataVersionInfoUgly.cs" />
+    <Compile Include="IDataVersionInfo.cs" />
     <Compile Include="DefaultEntityVersionDeserialization.cs" />
     <Compile Include="DefaultEntityVersionDetector.cs" />
     <Compile Include="IEntityVersionDeserialization.cs" />
     <Compile Include="IEntityVersionDetector.cs" />
     <Compile Include="IVersionMatcher.cs" />
+    <Compile Include="IVersionNextConverterTypeless.cs" />
     <Compile Include="IVersionResponseWrapper.cs" />
     <Compile Include="JsonToEntityConversion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VersionMatcher.cs" />
+    <Compile Include="AbstractVersionNextConverter.cs" />
     <Compile Include="VersionResponseWrapper.cs" />
   </ItemGroup>
   <ItemGroup>

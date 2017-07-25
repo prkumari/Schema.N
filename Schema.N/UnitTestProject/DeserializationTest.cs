@@ -46,8 +46,8 @@ namespace UnitTestProject
             entityConversion.RegisterDefaultDeserializer<PersonV1>(1);
             entityConversion.RegisterDefaultDeserializer<PersonV2>(2);
 
-            var v1Entity = entityConversion.DeserializeJsonToEntityVersion(jtokenV1);
-            var v2Entity = entityConversion.DeserializeJsonToEntityVersion(jtokenV2);
+            var v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jtokenV1);
+            var v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jtokenV2);
 
             Assert.AreEqual(v1Entity.EntityType, typeof (PersonV1));
             Assert.AreEqual(v2Entity.EntityType, typeof (PersonV2));
