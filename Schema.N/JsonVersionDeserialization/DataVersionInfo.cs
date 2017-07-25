@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JsonVersionDeserialization
+namespace Schema.N
 {
     public class DataVersionInfo<TRaw, TPoco> : IDataVersionInfo
     {

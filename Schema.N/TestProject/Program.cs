@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JsonVersionDeserialization;
+using DocumentDbClientLibrary;
 using Newtonsoft.Json.Linq;
+using Schema.N;
 
 namespace TestProject
 {
@@ -40,7 +42,8 @@ namespace TestProject
                 Weight = 2
             };
 
-            var versionDetector = new CompositeVersionDetector(new List<IVersionMatcher> { entityVersion1Matcher, entityVersion2Matcher});
+            var versionDetector =
+                new CompositeVersionDetector(new List<IVersionMatcher> {entityVersion1Matcher, entityVersion2Matcher});
 
             //entityConversion.VersionDetector = new DefaultEntityVersionDetector("SchemanVersion");
             //entityConversion.RegisterDeserializer("1", new DefaultEntityVersionDeserialization<PersonV1>());
@@ -69,7 +72,7 @@ namespace TestProject
 
             var newperson = new PersonV2
             {
-                Id = startData.Poco.Id,
+                Identifier = startData.Poco.Identifier,
                 FirstName = namesplits[0],
                 LastName = namesplits.Length > 1 ? string.Join(" ", namesplits.Skip(1)) : null,
                 DoB = null
@@ -82,7 +85,7 @@ namespace TestProject
         {
             var newperson = new PersonV3
             {
-                Id = startData.Poco.Id,
+                Identifier = startData.Poco.Identifier,
                 FirstName = startData.Poco.FirstName,
                 LastName = startData.Poco.LastName,
                 DoB = startData.Poco.DoB,

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 
-namespace JsonVersionDeserialization
+namespace Schema.N
 {
     public interface IDataVersionInfo
     {

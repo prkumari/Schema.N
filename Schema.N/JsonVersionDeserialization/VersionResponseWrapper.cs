@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JsonVersionDeserialization
+namespace Schema.N
 {
     public class VersionResponseWrapper<TEntity> : IVersionResponseWrapper<TEntity>
     {

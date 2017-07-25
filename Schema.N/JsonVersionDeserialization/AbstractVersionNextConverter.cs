@@ -1,7 +1,7 @@
-﻿namespace JsonVersionDeserialization
-{
-    using System;
+﻿using System;
 
+namespace Schema.N
+{
     public class AbstractVersionNextConverter<TRawData, TPocoThis, TPocoNext>  : IVersionNextConverterTypeless
     {
         public Func<DataVersionInfo<TRawData, TPocoThis>, DataVersionInfo<TRawData, TPocoNext>> ConversionFunc { get; set; }

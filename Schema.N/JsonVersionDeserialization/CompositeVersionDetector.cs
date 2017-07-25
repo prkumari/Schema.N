@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace JsonVersionDeserialization
+namespace Schema.N
 {
     public class CompositeVersionDetector : IEntityVersionDetector
     {
