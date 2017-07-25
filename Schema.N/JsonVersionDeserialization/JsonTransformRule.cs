@@ -2,12 +2,12 @@
 {
     public class JsonTransformRule
     {
-        public JsonConvertorRuleType Operation { get; set; }
+        public JsonTransformRuleType Operation { get; set; }
         public string TargetPath { get; set; }
         public string Value { get; set; }
     }
 
-    public enum JsonConvertorRuleType
+    public enum JsonTransformRuleType
     {
         Rename,
         Delete,

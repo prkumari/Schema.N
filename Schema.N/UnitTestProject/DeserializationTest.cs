@@ -5,6 +5,7 @@ using Schema.N;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using TestProject;
+using JsonVersionDeserialization;
 
 namespace UnitTestProject
 {
@@ -62,19 +63,19 @@ namespace UnitTestProject
             var jc = new JsonTransformer();
             var r1 = new JsonTransformRule()
             {
-                Operation = JsonConvertorRuleType.Rename,
+                Operation = JsonTransformRuleType.Rename,
                 TargetPath = "Name",
                 Value = "awesome"
             };
             var r2 = new JsonTransformRule()
             {
-                Operation = JsonConvertorRuleType.CopyToken,
+                Operation = JsonTransformRuleType.CopyToken,
                 TargetPath = "awesome",
                 Value = "Example"
             };
             var r3 = new JsonTransformRule()
             {
-                Operation = JsonConvertorRuleType.Delete,
+                Operation = JsonTransformRuleType.Delete,
                 TargetPath = "awesome",
             };
 
