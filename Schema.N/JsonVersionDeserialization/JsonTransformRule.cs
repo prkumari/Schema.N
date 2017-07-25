@@ -12,6 +12,8 @@
         Rename,
         Delete,
         CopyToken,
-        Replace
+        NewProperty,
+        SetValue,
+        Custom
     }
 }

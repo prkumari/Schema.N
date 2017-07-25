@@ -14,7 +14,7 @@ namespace JsonVersionDeserialization
 
             jTo.Merge(jFrom, new JsonMergeSettings
             {
-                MergeArrayHandling = MergeArrayHandling.Union,
+                MergeArrayHandling = MergeArrayHandling.Replace,
                 MergeNullValueHandling = MergeNullValueHandling.Merge
             });
 
@@ -34,13 +34,17 @@ namespace JsonVersionDeserialization
                     {
                         HandleCopy(rule.TargetPath, rule.Value, jTo);
                     }
+                    else if (rule.Operation == JsonTransformRuleType.NewProperty)
+                    {
+                        HandleNewProperty(rule.Value, jTo, rule.TargetPath);
+                    }
                 }
             }
 
             return jTo.ToString();
         }
 
-        public void HandleRename(string target, string value, JObject model)
+        private void HandleRename(string target, string value, JObject model)
         {
             var tokens = model.SelectTokens(target);
             foreach(var token in tokens)
@@ -53,7 +57,7 @@ namespace JsonVersionDeserialization
             }
         }
 
-        public void HandleDelete(string target, JObject model)
+        private void HandleDelete(string target, JObject model)
         {
             var tokens = model.SelectTokens(target);
             foreach (var token in tokens)
@@ -65,7 +69,7 @@ namespace JsonVersionDeserialization
             }
         }
 
-        public void HandleCopy(string target, string value, JObject model)
+        private void HandleCopy(string target, string value, JObject model)
         {
             var copyFrom = model.SelectToken(target);
             var copyTo = model.SelectToken(value);
@@ -83,6 +87,34 @@ namespace JsonVersionDeserialization
                 throw new InvalidOperationException("The parent is missing.");
 
             copyTo.Replace(copyFrom);
+        }
+
+        private void HandleNewProperty(string propertyname, JObject model, string targetpath = null)
+        {
+            JToken targetToken;
+            if(targetpath == null)
+            {
+                targetToken = model.Root;
+            }
+            else
+            {
+                targetToken = model.SelectToken(targetpath);
+            }
+
+            var newToken = new JProperty(propertyname, "");
+
+            var parent = targetToken.Parent;
+            if (parent == null) {
+                model.Add(newToken);
+            }   
+            else
+            {
+                var container = targetToken as JObject;
+                if (container != null)
+                {
+                    container.Add(newToken);
+                }
+            }
         }
     }
 }
