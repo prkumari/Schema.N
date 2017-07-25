@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JsonVersionDeserialization
+﻿namespace JsonVersionDeserialization
 {
-    public class JsonConvertorRule
+    public class JsonTransformRule
     {
         public JsonConvertorRuleType Operation { get; set; }
         public string TargetPath { get; set; }
@@ -15,6 +9,9 @@ namespace JsonVersionDeserialization
 
     public enum JsonConvertorRuleType
     {
-        Rename
+        Rename,
+        Delete,
+        CopyToken,
+        Replace
     }
 }
