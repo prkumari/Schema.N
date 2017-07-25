@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JsonVersionDeserialization\Schema.N.csproj">
-      <Project>{AB6DC401-7C95-486A-841C-B05A36B014A3}</Project>
+      <Project>{ab6dc401-7c95-486a-841c-b05a36b014a3}</Project>
       <Name>Schema.N</Name>
     </ProjectReference>
     <ProjectReference Include="..\TestProject\TestProject.csproj">

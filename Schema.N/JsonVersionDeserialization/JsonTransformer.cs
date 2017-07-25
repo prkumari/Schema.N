@@ -22,15 +22,15 @@ namespace JsonVersionDeserialization
             {
                 foreach (var rule in rules)
                 {
-                    if (rule.Operation == JsonConvertorRuleType.Rename)
+                    if (rule.Operation == JsonTransformRuleType.Rename)
                     {
                         HandleRename(rule.TargetPath, rule.Value, jTo);
                     }
-                    else if (rule.Operation == JsonConvertorRuleType.Delete)
+                    else if (rule.Operation == JsonTransformRuleType.Delete)
                     {
                         HandleDelete(rule.TargetPath, jTo);
                     }
-                    else if (rule.Operation == JsonConvertorRuleType.CopyToken)
+                    else if (rule.Operation == JsonTransformRuleType.CopyToken)
                     {
                         HandleCopy(rule.TargetPath, rule.Value, jTo);
                     }
