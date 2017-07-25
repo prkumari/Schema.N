@@ -8,7 +8,7 @@ namespace TestProject
 {
     public class PersonV2
     {
-        public int Id { get; set; }
+        public int Identifier { get; set; }
 
         public string FirstName { get; set; }
 

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonVersionDeserialization"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{A0105C77-9ECC-44B5-9DCF-789BCA9D15CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentDbClientLibrary", "DocumentDbClientLibrary\DocumentDbClientLibrary.csproj", "{90E20CB9-628D-4694-9C48-69196BDF629C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A0105C77-9ECC-44B5-9DCF-789BCA9D15CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0105C77-9ECC-44B5-9DCF-789BCA9D15CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0105C77-9ECC-44B5-9DCF-789BCA9D15CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90E20CB9-628D-4694-9C48-69196BDF629C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90E20CB9-628D-4694-9C48-69196BDF629C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90E20CB9-628D-4694-9C48-69196BDF629C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90E20CB9-628D-4694-9C48-69196BDF629C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
