@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{148BACC3-501A-4DA8-8AB1-E19F6D9B1451}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonVersionDeserialization", "JsonVersionDeserialization\JsonVersionDeserialization.csproj", "{AB6DC401-7C95-486A-841C-B05A36B014A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schema.N", "JsonVersionDeserialization\Schema.N.csproj", "{AB6DC401-7C95-486A-841C-B05A36B014A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{A0105C77-9ECC-44B5-9DCF-789BCA9D15CD}"
 EndProject

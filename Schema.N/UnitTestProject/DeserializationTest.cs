@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using JsonVersionDeserialization;
+using Schema.N;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using TestProject;
@@ -51,6 +51,41 @@ namespace UnitTestProject
 
             Assert.AreEqual(v1Entity.EntityType, typeof (PersonV1));
             Assert.AreEqual(v2Entity.EntityType, typeof (PersonV2));
+        }
+
+        [TestMethod]
+        public void ConvertValidateBasicOps()
+        {
+            var jsonV1Text = File.ReadAllText(@"PV1.txt");
+            var jsonV2Text = File.ReadAllText(@"PV2.txt");
+
+            var jc = new JsonTransformer();
+            var r1 = new JsonTransformRule()
+            {
+                Operation = JsonConvertorRuleType.Rename,
+                TargetPath = "Name",
+                Value = "awesome"
+            };
+            var r2 = new JsonTransformRule()
+            {
+                Operation = JsonConvertorRuleType.CopyToken,
+                TargetPath = "awesome",
+                Value = "Example"
+            };
+            var r3 = new JsonTransformRule()
+            {
+                Operation = JsonConvertorRuleType.Delete,
+                TargetPath = "awesome",
+            };
+
+            var rules = new List<JsonTransformRule>();
+            rules.Add(r1);
+            rules.Add(r2);
+            rules.Add(r3);
+            var result = jc.ConvertTo(jsonV1Text, jsonV2Text, rules);
+            Assert.AreEqual("{\r\n  \"Id\": 1,\r\n  \"FirstName\": \"Priya\",\r\n  \"LastName\": " +
+                "\"Kumari\",\r\n  \"DoB\": \"1989-02-01\",\r\n  \"SchemanVersion\": 1,\r\n  \"Example\": " +
+                "\"Priya Kumari\"\r\n}", result);
         }
     }
 }

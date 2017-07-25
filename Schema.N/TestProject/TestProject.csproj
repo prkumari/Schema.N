@@ -40,7 +40,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\..\CxCache\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -72,9 +72,9 @@
       <Project>{90E20CB9-628D-4694-9C48-69196BDF629C}</Project>
       <Name>DocumentDbClientLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JsonVersionDeserialization\JsonVersionDeserialization.csproj">
+    <ProjectReference Include="..\JsonVersionDeserialization\Schema.N.csproj">
       <Project>{AB6DC401-7C95-486A-841C-B05A36B014A3}</Project>
-      <Name>JsonVersionDeserialization</Name>
+      <Name>Schema.N</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

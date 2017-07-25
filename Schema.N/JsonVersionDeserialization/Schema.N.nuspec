@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Priya Kumari, Patrick Gorman, Peymaun Heidari, Joyjeet Majumdar, David Chryst</authors>
+    <owners>Priya Kumari, Patrick Gorman, Peymaun Heidari, Joyjeet Majumdar, David Chryst</owners>
+    <licenseUrl>https://github.com/prkumari/Schema.N/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/prkumari/Schema.N</projectUrl>
+    <iconUrl>https://openclipart.org/image/2400px/svg_to_png/211734/matt-icons_face-devilish.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Initial Test Release.</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>JSON,version,versions,NoSql</tags>
+  </metadata>
+</package>
