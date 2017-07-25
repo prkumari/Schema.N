@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JsonVersionDeserialization
+namespace Schema.N
 {
     interface IJsonTransformer
     {

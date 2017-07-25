@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace JsonVersionDeserialization
+namespace Schema.N
 {
     public class JsonTransformer : IJsonTransformer
     {

@@ -1,4 +1,4 @@
-﻿namespace JsonVersionDeserialization
+﻿namespace Schema.N
 {
     public class JsonTransformRule
     {
