@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("JsonVersionDeserialization")]
-[assembly: AssemblyDescription("Creates a Transparent Version resolution layer on top of a JSON data source.")]
+[assembly: AssemblyTitle("Schema.N")]
+[assembly: AssemblyDescription("Upgrade from JSON schema version N-1 to schema version N without taking a system outage. Use Schema.N to determine the schema version of an input JSON string, and deserialize into the corresponding (schema version N-1 or schema N) POCO.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Schema.N")]
-[assembly: AssemblyProduct("JsonVersionDeserialization")]
+[assembly: AssemblyProduct("Schema.N")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

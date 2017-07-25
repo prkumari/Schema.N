@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace JsonVersionDeserialization
+namespace Schema.N
 {
     public interface IEntityVersionDetector
     {
