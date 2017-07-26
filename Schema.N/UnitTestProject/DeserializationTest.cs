@@ -13,11 +13,11 @@ namespace UnitTestProject
         [TestMethod]
         public void VersionDeserializeTest()
         {
-			var jsonV1Text = File.ReadAllText(@"PV1.txt");
-			var jsonV2Text = File.ReadAllText(@"PV2.txt");
+			string jsonV1Text = File.ReadAllText(@"PV1.txt");
+			string jsonV2Text = File.ReadAllText(@"PV2.txt");
 
-			var jtokenV1 = JObject.Parse(jsonV1Text);
-			var jtokenV2 = JObject.Parse(jsonV2Text);
+			var jobjectV1 = JObject.Parse(jsonV1Text);
+			var jobjectV2 = JObject.Parse(jsonV2Text);
 
 			var entityConversion = new JsonToEntityConversion();
 
@@ -29,11 +29,18 @@ namespace UnitTestProject
 			entityConversion.RegisterNewVersion(version1Info);
 			entityConversion.RegisterNewVersion(version2Info);
 
-			var v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jtokenV1);
-			var v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jtokenV2);
+			var v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jsonV1Text);
+			var v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jsonV2Text);
 
 			Assert.AreEqual(v1Entity.EntityType, typeof(PersonV1));
 			Assert.AreEqual(v2Entity.EntityType, typeof(PersonV2));
+
+			v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jobjectV1);
+			v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jobjectV2);
+
+			Assert.AreEqual(v1Entity.EntityType, typeof(PersonV1));
+			Assert.AreEqual(v2Entity.EntityType, typeof(PersonV2));
+
 		}
 
 		[TestMethod]
