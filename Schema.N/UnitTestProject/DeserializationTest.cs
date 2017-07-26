@@ -111,5 +111,32 @@ namespace UnitTestProject
                 "\"Timestamp\": \"01/01/1970\"\r\n  },\r\n  " +
                 "\"Example\": {\r\n    \"AGoodProperty\": \"AGoodValue\"\r\n  }\r\n}", result);
         }
+
+        [TestMethod]
+        public void ConvertValidateVersionUpgrade()
+        {
+            var jsonV1Text = File.ReadAllText(@"UserV1.txt");
+            var jsonV2Text = File.ReadAllText(@"UserV2.txt");
+
+            var jc = new JsonTransformer();
+            var r1 = new JsonTransformRule()
+            {
+                Operation = JsonTransformRuleType.Rename,
+                TargetPath = "about",
+                Value = "description"
+            };
+            var r3 = new JsonTransformRule()
+            {
+                Operation = JsonTransformRuleType.Delete,
+                TargetPath = "eyeColor",
+            };
+
+            var rules = new List<JsonTransformRule>();
+            rules.Add(r1);
+            rules.Add(r3);
+            var result = jc.ConvertTo(jsonV1Text, jsonV2Text, rules);
+            Assert.AreEqual("{\r\n  \"guid\": \"6557159b-84e8-4651-a6b2-bc57f84c1a7e\",\r\n  \"isActive\": true,\r\n  \"age\": 20,\r\n  \"name\": \"Singleton Craft\",\r\n  \"gender\": \"male\",\r\n  \"address\": \"413 Forrest Street, Lemoyne, Kentucky, 381\",\r\n  \"phone\": \"+1 (971) 407-3748\",\r\n  \"description\": \"Occaecat exercitation consectetur do anim magna nisi sunt. Dolore Lorem ea fugiat velit reprehenderit laboris incididunt cupidatat occaecat velit. Et aliqua nisi nisi amet et velit quis commodo culpa exercitation ad. Labore consectetur ullamco non aliqua ullamco sit do consequat esse nisi labore fugiat. Reprehenderit laboris esse qui laboris amet sint aliquip commodo.\\r\\n\"\r\n}", result);
+        }
+
     }
 }
