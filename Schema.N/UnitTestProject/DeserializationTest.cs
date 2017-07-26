@@ -105,10 +105,10 @@ namespace UnitTestProject
             rules.Add(r6);
 
             var result = jc.ConvertTo(jsonV1Text, jsonV2Text, rules);
-            Assert.AreEqual("{\r\n  \"Id\": 1,\r\n  \"FirstName\": \"Priya\",\r\n  " +
-                "\"LastName\": \"Kumari\",\r\n  \"DoB\": \"1989-02-01\",\r\n  " +
-                "\"SchemanVersion\": {\r\n    \"Test\": 1,\r\n    " +
-                "\"Timestamp\": \"01/01/1970\"\r\n  },\r\n  " +
+            Assert.AreEqual("{\r\n  \"Identifier\": 1,\r\n  \"FirstName\": " +
+                "\"Priya\",\r\n  \"LastName\": \"Kumari\",\r\n  \"DoB\": " +
+                "\"1989-02-01\",\r\n  \"SchemanVersion\": {\r\n    " +
+                "\"Test\": 1,\r\n    \"Timestamp\": \"01/01/1970\"\r\n  },\r\n  " +
                 "\"Example\": {\r\n    \"AGoodProperty\": \"AGoodValue\"\r\n  }\r\n}", result);
         }
 
