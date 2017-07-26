@@ -6,6 +6,32 @@ Schema.N is a reusable utility to parse multiple versions of JSON strings and de
 Schema.N Project Philosophy:
 
 The Schema.N philosophy assumes that the dev writes a query to pull a JSON string from any data store (think Azure DocumentDB, Redis, MongoDB, CosmosDB, Azure Table Storage, Kusto, flat files, Apache Kafka, etcetera) into memory, then we detect the schema version of the JSON string, and deserialize into the .NET Data Transfer Object that corresponds to the schema version.
+ 
+## Sample Main()
+	static void Main(string[] args)
+        {
+            var entityConversion = new JsonToEntityConversion();
+
+            var pocoConverterV1V2 =
+                new JsonTransformerVersionNextConverter<FooV1, FooV2>(
+                    new JsonTransformRule("Id", JsonTransformRuleType.Rename, "Identifier"),
+                    new JsonTransformRule("Name", JsonTransformRuleType.Rename, "FirstName"),
+                    new JsonTransformRule("SchemanVersion", JsonTransformRuleType.SetValue, 2));
+
+            var pocoConverterV2V3 =
+                new JsonTransformerVersionNextConverter<FooV2, FooV3>(
+                    new JsonTransformRule("Identifier", JsonTransformRuleType.Rename, "Id"),
+                    new JsonTransformRule("Description", JsonTransformRuleType.Delete),
+                    new JsonTransformRule("SchemanVersion", JsonTransformRuleType.SetValue, 3));
+
+            entityConversion.RegisterNewVersion(new NewPocoVersionInfo<FooV1>(1));
+            entityConversion.RegisterNewVersion(new NewPocoVersionInfo<FooV2>(2, pocoConverterV1V2));
+            entityConversion.RegisterNewVersion(new NewPocoVersionInfo<FooV3>(3, pocoConverterV2V3));
+
+            var sampleFoo = GetSampleFooV1();
+            var finalResult = entityConversion.DeserializeAndConvertToLatestVersion(sampleFoo);
+            var finalPoco = entityConversion.DeserializeJsonToCurrentVersion(finalResult.RawDataObject as JObject);
+        }
 
 ## Sample Usecase:
 
