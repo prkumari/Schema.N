@@ -7,11 +7,11 @@ Schema.N Project Philosophy:
 
 The Schema.N philosophy assumes that the dev writes a query to pull a JSON string from any data store (think Azure DocumentDB, Redis, MongoDB, CosmosDB, Azure Table Storage, Kusto, flat files, Apache Kafka, etcetera) into memory, then we detect the schema version of the JSON string, and deserialize into the .NET Data Transfer Object that corresponds to the schema version.
 
-Sample Usecase:
+## Sample Usecase:
 
 We want to upgrade the schema from Version 1 to Version 2:
 
-Version 1 Json Data:
+### Version 1 Json Data:
 {
     "guid": "6557159b-84e8-4651-a6b2-bc57f84c1a7e",
     "isActive": true,
@@ -25,7 +25,7 @@ Version 1 Json Data:
 }
 
   
-Version 2 Json Data:
+### Version 2 Json Data:
 {
     "guid": "6557159b-84e8-4651-a6b2-bc57f84c1a7e",
 	  "isActive": true,
@@ -40,7 +40,7 @@ Version 2 Json Data:
 }
 
 
-Following are the specific changes needs to happen during upgrade:
+#### Following are the specific changes needs to happen during upgrade:
 
 1. Add new Keys: company, email, phone
 2. Rename Keys: about becomes description
@@ -48,31 +48,31 @@ Following are the specific changes needs to happen during upgrade:
 4. Delete Keys: eyeColor
 
 
-Sample Code Snippet:
-var jsonV1Text = File.ReadAllText(@"UserV1.txt");
-var jsonV2Text = File.ReadAllText(@"UserV2.txt");
+### Sample Code Snippet:
+var jsonV1Text = File.ReadAllText(@"UserV1.txt"); </br>
+var jsonV2Text = File.ReadAllText(@"UserV2.txt");</br>
 
-var jc = new JsonTransformer();
-var r1 = new JsonTransformRule()
-{
-	Operation = JsonTransformRuleType.Rename,
-	TargetPath = "about",
-	Value = "description"
-};
-var r2 = new JsonTransformRule()
-{
-	Operation = JsonTransformRuleType.CopyToken,
-	TargetPath = "isActive",
-	Value = "isActiveEmployee"
-};
-var r3 = new JsonTransformRule()
-{
-	Operation = JsonTransformRuleType.Delete,
-	TargetPath = "eyeColor",
-};
+var jc = new JsonTransformer();</br>
+var r1 = new JsonTransformRule()</br>
+{</br>
+	Operation = JsonTransformRuleType.Rename,</br>
+	TargetPath = "about",</br>
+	Value = "description"</br>
+};</br>
+var r2 = new JsonTransformRule()</br>
+{</br>
+	Operation = JsonTransformRuleType.CopyToken,</br>
+	TargetPath = "isActive",</br>
+	Value = "isActiveEmployee"</br>
+};</br>
+var r3 = new JsonTransformRule()</br>
+{</br>
+	Operation = JsonTransformRuleType.Delete,</br>
+	TargetPath = "eyeColor",</br>
+};</br>
 
-var rules = new List<JsonTransformRule>();
+var rules = new List<JsonTransformRule>();</br>
 rules.Add(r1);
 rules.Add(r2);
-rules.Add(r3);
-var result = jc.ConvertTo(jsonV1Text, jsonV2Text, rules);
+rules.Add(r3);</br>
+var result = jc.ConvertTo(jsonV1Text, jsonV2Text, rules);</br>
