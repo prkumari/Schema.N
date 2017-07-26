@@ -1,4 +1,7 @@
-﻿namespace Schema.N
+﻿using Newtonsoft.Json.Linq;
+using System;
+
+namespace Schema.N
 {
     public class JsonTransformRule
     {
@@ -6,11 +9,35 @@
         public string TargetPath { get; set; }
         public object Value { get; set; }
 
+        Action<JObject> _customMethod = null;
+        public Action<JObject> CustomMethod {
+            get
+            {
+                return _customMethod;
+            }
+            set
+            {
+                if(value != null)
+                {
+                    _customMethod = value;
+                    Operation = JsonTransformRuleType.Custom;
+                }
+            }
+        }
+
         public JsonTransformRule(string targetPath, JsonTransformRuleType operation, object value = null)
         {
             Operation = operation;
             TargetPath = targetPath;
             Value = value;
+        }
+
+        public JsonTransformRule(Action<JObject> custom)
+        {
+            CustomMethod = custom;
+            Operation = JsonTransformRuleType.Custom;
+            TargetPath = null;
+            Value = null;
         }
     }
 
