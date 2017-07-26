@@ -46,23 +46,23 @@ namespace Schema.N
                 {
                     if (rule.Operation == JsonTransformRuleType.Rename)
                     {
-                        HandleRename(rule.TargetPath, rule.Value.ToString(), jTo);
+                        HandleRename(rule.TargetKey, rule.Value.ToString(), jTo);
                     }
                     else if (rule.Operation == JsonTransformRuleType.Delete)
                     {
-                        HandleDelete(rule.TargetPath, jTo);
+                        HandleDelete(rule.TargetKey, jTo);
                     }
                     else if (rule.Operation == JsonTransformRuleType.CopyToken)
                     {
-                        HandleCopy(rule.TargetPath, rule.Value.ToString(), jTo);
+                        HandleCopy(rule.TargetKey, rule.Value.ToString(), jTo);
                     }
                     else if (rule.Operation == JsonTransformRuleType.NewProperty)
                     {
-                        HandleNewProperty(rule.TargetPath, jTo, rule.Value as string);
+                        HandleNewProperty(rule.TargetKey, jTo, rule.Value as string);
                     }
                     else if (rule.Operation == JsonTransformRuleType.SetValue)
                     {
-                        HandleSetValue(rule.TargetPath, rule.Value, jTo);
+                        HandleSetValue(rule.TargetKey, rule.Value, jTo);
                     }
                     else if (rule.Operation == JsonTransformRuleType.Custom)
                     {

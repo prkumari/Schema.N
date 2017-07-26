@@ -6,7 +6,7 @@ namespace Schema.N
     public class JsonTransformRule
     {
         public JsonTransformRuleType Operation { get; set; }
-        public string TargetPath { get; set; }
+        public string TargetKey { get; set; }
         public object Value { get; set; }
 
         Action<JObject> _customMethod = null;
@@ -25,10 +25,10 @@ namespace Schema.N
             }
         }
 
-        public JsonTransformRule(string targetPath, JsonTransformRuleType operation, object value = null)
+        public JsonTransformRule(string targetKey, JsonTransformRuleType operation, object value = null)
         {
             Operation = operation;
-            TargetPath = targetPath;
+            TargetKey = targetKey;
             Value = value;
         }
 
@@ -36,7 +36,7 @@ namespace Schema.N
         {
             CustomMethod = custom;
             Operation = JsonTransformRuleType.Custom;
-            TargetPath = null;
+            TargetKey = null;
             Value = null;
         }
     }
