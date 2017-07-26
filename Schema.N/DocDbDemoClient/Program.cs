@@ -31,10 +31,10 @@ namespace DocDbDemoClient
             var pocoConverterV1V2 =
                 new JsonTransformerVersionNextConverter<UserV1, UserV2>(
                     new JsonTransformRule("about", JsonTransformRuleType.Rename, "description"),
-                    new JsonTransformRule("isActiveEmployee", JsonTransformRuleType.NewProperty, ""),
+                    new JsonTransformRule("isActiveEmployee", JsonTransformRuleType.NewProperty),
                     new JsonTransformRule("isActive", JsonTransformRuleType.CopyToken, "isActiveEmployee"),
-                    new JsonTransformRule("company", JsonTransformRuleType.NewProperty, ""),
-                    new JsonTransformRule("email", JsonTransformRuleType.NewProperty, ""),
+                    new JsonTransformRule("company", JsonTransformRuleType.NewProperty),
+                    new JsonTransformRule("email", JsonTransformRuleType.NewProperty),
                     new JsonTransformRule("eyeColor", JsonTransformRuleType.Delete),
                     new JsonTransformRule("SchemanVersion", JsonTransformRuleType.SetValue, 2));
 

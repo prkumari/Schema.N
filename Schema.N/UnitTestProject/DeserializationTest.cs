@@ -52,7 +52,7 @@ namespace UnitTestProject
 	        var r1 = new JsonTransformRule("Name", JsonTransformRuleType.Rename, "awesome");
 	        var r2 = new JsonTransformRule("awesome", JsonTransformRuleType.CopyToken, "SchemanVersion");
 	        var r3 = new JsonTransformRule("awesome", JsonTransformRuleType.Delete);
-	        var r4 = new JsonTransformRule("Example", JsonTransformRuleType.NewProperty, "AGoodProperty");
+	        var r4 = new JsonTransformRule("AGoodProperty", JsonTransformRuleType.NewProperty, "Example");
 	        var r5 = new JsonTransformRule("Example.AGoodProperty", JsonTransformRuleType.SetValue, "AGoodValue");
 	        var r6 = new JsonTransformRule("SchemanVersion", JsonTransformRuleType.SetValue, new { Test = 1, Timestamp = "01/01/1970" });
 

@@ -58,7 +58,7 @@ namespace Schema.N
                     }
                     else if (rule.Operation == JsonTransformRuleType.NewProperty)
                     {
-                        HandleNewProperty(rule.Value.ToString(), jTo, rule.TargetPath);
+                        HandleNewProperty(rule.TargetPath, jTo, rule.Value as string);
                     }
                     else if (rule.Operation == JsonTransformRuleType.SetValue)
                     {
@@ -134,6 +134,11 @@ namespace Schema.N
 
         private void HandleNewProperty(string propertyname, JObject model, string targetpath = null)
         {
+            if(string.IsNullOrEmpty(propertyname))
+            {
+                throw new ArgumentException("Valid Property Name not provided!");
+            }
+
             JToken targetToken;
             if(targetpath == null)
             {
