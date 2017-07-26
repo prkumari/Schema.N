@@ -38,6 +38,10 @@ namespace Schema.N
                     {
                         HandleNewProperty(rule.Value, jTo, rule.TargetPath);
                     }
+                    else if (rule.Operation == JsonTransformRuleType.SetValue)
+                    {
+                        HandleSetValue(rule.TargetPath, rule.Value, jTo);
+                    }
                 }
             }
 
@@ -113,6 +117,24 @@ namespace Schema.N
                 if (container != null)
                 {
                     container.Add(newToken);
+                }
+            }
+        }
+
+        private void HandleSetValue(string target, string value, JObject model)
+        {
+            var token = model.SelectToken(target);
+
+            if (token != null)
+            {
+                var parent = token.Parent;
+                if (parent == null)
+                    throw new InvalidOperationException("The parent is missing.");
+
+                var parentProp = parent as JProperty;
+                if (parentProp != null) {
+                    var newToken = new JProperty(parentProp.Name, value);
+                    parent.Replace(newToken);
                 }
             }
         }

@@ -83,17 +83,25 @@ namespace UnitTestProject
                 TargetPath = "Example",
                 Value = "AGoodProperty"
             };
+            var r5 = new JsonTransformRule()
+            {
+                Operation = JsonTransformRuleType.SetValue,
+                TargetPath = "Example.AGoodProperty",
+                Value = "AGoodValue"
+            };
 
             var rules = new List<JsonTransformRule>();
             rules.Add(r1);
             rules.Add(r2);
             rules.Add(r3);
             rules.Add(r4);
+            rules.Add(r5);
+
             var result = jc.ConvertTo(jsonV1Text, jsonV2Text, rules);
             Assert.AreEqual("{\r\n  \"Id\": 1,\r\n  \"FirstName\": \"Priya\",\r\n  " +
                 "\"LastName\": \"Kumari\",\r\n  \"DoB\": \"1989-02-01\",\r\n  " +
                 "\"SchemanVersion\": \"Priya Kumari\",\r\n  \"Example\": {\r\n    " +
-                "\"AGoodProperty\": \"\"\r\n  }\r\n}", result);
+                "\"AGoodProperty\": \"AGoodValue\"\r\n  }\r\n}", result);
         }
     }
 }
