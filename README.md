@@ -7,8 +7,8 @@ Schema.N Project Philosophy:
 
 The Schema.N philosophy assumes that the dev writes a query to pull a JSON string from any data store (think Azure DocumentDB, Redis, MongoDB, CosmosDB, Azure Table Storage, Kusto, flat files, Apache Kafka, etcetera) into memory, then we detect the schema version of the JSON string, and deserialize into the .NET Data Transfer Object that corresponds to the schema version.
  
-## Sample Main()
-	static void Main(string[] args)
+## Sample method to migrate from old to new version
+	static void Foo()
         {
             var entityConversion = new JsonToEntityConversion();
 
@@ -75,30 +75,33 @@ We want to upgrade the schema from Version 1 to Version 2:
 
 
 ### Sample Code Snippet:
-var jsonV1Text = File.ReadAllText(@"UserV1.txt"); </br>
-var jsonV2Text = File.ReadAllText(@"UserV2.txt");</br>
+		public void VersionDeserialize()
+        	{
+			string jsonV1Text = File.ReadAllText(@"PV1.txt");
+			string jsonV2Text = File.ReadAllText(@"PV2.txt");
 
-var jc = new JsonTransformer();</br>
-var r1 = new JsonTransformRule()</br>
-{</br>
-	Operation = JsonTransformRuleType.Rename,</br>
-	TargetPath = "about",</br>
-	Value = "description"</br>
-};</br>
-var r2 = new JsonTransformRule()</br>
-{</br>
-	Operation = JsonTransformRuleType.CopyToken,</br>
-	TargetPath = "isActive",</br>
-	Value = "isActiveEmployee"</br>
-};</br>
-var r3 = new JsonTransformRule()</br>
-{</br>
-	Operation = JsonTransformRuleType.Delete,</br>
-	TargetPath = "eyeColor",</br>
-};</br>
+			var jobjectV1 = JObject.Parse(jsonV1Text);
+			var jobjectV2 = JObject.Parse(jsonV2Text);
 
-var rules = new List<JsonTransformRule>();</br>
-rules.Add(r1);
-rules.Add(r2);
-rules.Add(r3);</br>
-var result = jc.ConvertTo(jsonV1Text, jsonV2Text, rules);</br>
+			var entityConversion = new JsonToEntityConversion();
+
+	        var entityVersion1Matcher = new VersionMatcher(jObject => jObject.Value<int>("SchemanVersion") == 1, 1, 1);
+	        var entityVersion2Matcher = new VersionMatcher(jObject => jObject.Value<int>("SchemanVersion") == 2, 2, 2);
+
+			var version1Info = new NewPocoVersionInfo<PersonV1>(1, null, entityVersion1Matcher);
+			var version2Info = new NewPocoVersionInfo<PersonV2>(2, null, entityVersion2Matcher);
+			entityConversion.RegisterNewVersion(version1Info);
+			entityConversion.RegisterNewVersion(version2Info);
+
+			var v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jsonV1Text);
+			var v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jsonV2Text);
+
+			Assert.AreEqual(v1Entity.EntityType, typeof(PersonV1));
+			Assert.AreEqual(v2Entity.EntityType, typeof(PersonV2));
+
+			v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jobjectV1);
+			v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jobjectV2);
+
+			Assert.AreEqual(v1Entity.EntityType, typeof(PersonV1));
+			Assert.AreEqual(v2Entity.EntityType, typeof(PersonV2));
+		}
