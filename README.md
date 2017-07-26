@@ -85,8 +85,8 @@ We want to upgrade the schema from Version 1 to Version 2:
 
 			var entityConversion = new JsonToEntityConversion();
 
-	        var entityVersion1Matcher = new VersionMatcher(jObject => jObject.Value<int>("SchemanVersion") == 1, 1, 1);
-	        var entityVersion2Matcher = new VersionMatcher(jObject => jObject.Value<int>("SchemanVersion") == 2, 2, 2);
+	        	var entityVersion1Matcher = new VersionMatcher(jObject => jObject.Value<int>("SchemanVersion") == 1, 1, 1);
+	        	var entityVersion2Matcher = new VersionMatcher(jObject => jObject.Value<int>("SchemanVersion") == 2, 2, 2);
 
 			var version1Info = new NewPocoVersionInfo<PersonV1>(1, null, entityVersion1Matcher);
 			var version2Info = new NewPocoVersionInfo<PersonV2>(2, null, entityVersion2Matcher);
