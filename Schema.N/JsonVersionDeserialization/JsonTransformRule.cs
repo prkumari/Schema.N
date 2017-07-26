@@ -4,7 +4,7 @@
     {
         public JsonTransformRuleType Operation { get; set; }
         public string TargetPath { get; set; }
-        public string Value { get; set; }
+        public object Value { get; set; }
     }
 
     public enum JsonTransformRuleType

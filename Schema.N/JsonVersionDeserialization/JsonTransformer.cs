@@ -24,7 +24,7 @@ namespace Schema.N
                 {
                     if (rule.Operation == JsonTransformRuleType.Rename)
                     {
-                        HandleRename(rule.TargetPath, rule.Value, jTo);
+                        HandleRename(rule.TargetPath, rule.Value.ToString(), jTo);
                     }
                     else if (rule.Operation == JsonTransformRuleType.Delete)
                     {
@@ -32,11 +32,11 @@ namespace Schema.N
                     }
                     else if (rule.Operation == JsonTransformRuleType.CopyToken)
                     {
-                        HandleCopy(rule.TargetPath, rule.Value, jTo);
+                        HandleCopy(rule.TargetPath, rule.Value.ToString(), jTo);
                     }
                     else if (rule.Operation == JsonTransformRuleType.NewProperty)
                     {
-                        HandleNewProperty(rule.Value, jTo, rule.TargetPath);
+                        HandleNewProperty(rule.Value.ToString(), jTo, rule.TargetPath);
                     }
                     else if (rule.Operation == JsonTransformRuleType.SetValue)
                     {
@@ -121,22 +121,55 @@ namespace Schema.N
             }
         }
 
-        private void HandleSetValue(string target, string value, JObject model)
+        private void HandleSetValue(string target, object value, JObject model)
         {
             var token = model.SelectToken(target);
 
             if (token != null)
             {
+                dynamic jObj = ObtainValue(value);
+                if(jObj == null)
+                {
+                    throw new ArgumentException("Could not translate value!");
+                }
+
                 var parent = token.Parent;
                 if (parent == null)
                     throw new InvalidOperationException("The parent is missing.");
 
                 var parentProp = parent as JProperty;
                 if (parentProp != null) {
-                    var newToken = new JProperty(parentProp.Name, value);
+                    var newToken = new JProperty(parentProp.Name, jObj);
                     parent.Replace(newToken);
                 }
             }
+        }
+
+        private dynamic ObtainValue(object value)
+        {
+            dynamic result = null;
+            try
+            {
+                result = JObject.FromObject(value);
+                return result;
+            }
+            catch { }
+
+            try
+            {
+                result = JObject.Parse(value.ToString());
+                return result;
+            }
+            catch { }
+
+            try
+            {
+                result = value.ToString();
+                return result;
+            }
+            catch { }
+
+            return result;
         }
     }
 }
