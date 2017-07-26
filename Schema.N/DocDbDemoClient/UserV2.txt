@@ -1,0 +1,9 @@
+﻿{
+    "guid": "6557159b-84e8-4651-a6b2-bc57f84c1a7e",
+	"isActive": true,
+    "age": 20,
+    "name": "Singleton Craft",
+    "gender": "male",
+    "address": "413 Forrest Street, Lemoyne, Kentucky, 381",
+    "phone": "+1 (971) 407-3748",
+}
