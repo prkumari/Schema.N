@@ -12,31 +12,31 @@ The Schema.N philosophy assumes that the dev writes a query to pull a JSON strin
 We want to upgrade the schema from Version 1 to Version 2:
 
 ### Version 1 Json Data:
-{
-    "guid": "6557159b-84e8-4651-a6b2-bc57f84c1a7e",
-    "isActive": true,
-    "age": 20,
-    "eyeColor": "brown",
-    "name": "Singleton Craft",
-	  "phone": "+1 (971) 407-3748",
-    "gender": "male",
-    "address": "413 Forrest Street, Lemoyne, Kentucky, 381",
-    "about": "Occaecat exercitation consectetur do anim magna nisi sunt. Dolore Lorem ea fugiat velit reprehenderit laboris incididunt cupidatat occaecat velit. Et aliqua nisi nisi amet et velit quis commodo culpa exercitation ad. Labore consectetur ullamco non aliqua ullamco sit do consequat esse nisi labore fugiat. Reprehenderit laboris esse qui laboris amet sint aliquip commodo.\r\n",
+{</br>
+    "guid": "6557159b-84e8-4651-a6b2-bc57f84c1a7e",</br>
+    "isActive": true,</br>
+    "age": 20,</br>
+    "eyeColor": "brown",</br>
+    "name": "Singleton Craft",</br>
+    "phone": "+1 (971) 407-3748",</br>
+    "gender": "male",</br>
+    "address": "413 Forrest Street, Lemoyne, Kentucky, 381",</br>
+    "about": "Occaecat exercitation consectetur do anim magna nisi sunt. Dolore Lorem ea fugiat velit reprehenderit laboris incididunt cupidatat occaecat velit. Et aliqua nisi nisi amet et velit quis commodo culpa exercitation ad. Labore consectetur ullamco non aliqua ullamco sit do consequat esse nisi labore fugiat. Reprehenderit laboris esse qui laboris amet sint aliquip commodo.\r\n",</br>
 }
 
   
 ### Version 2 Json Data:
-{
-    "guid": "6557159b-84e8-4651-a6b2-bc57f84c1a7e",
-	  "isActive": true,
-    "age": 20,
-    "name": "Singleton Craft",
-    "gender": "male",
-    "address": "413 Forrest Street, Lemoyne, Kentucky, 381",
-	  "company": null,
-    "phone": "+1 (971) 407-3748",
-	  "isActiveEmployee": true,
-	  "description": "Occaecat exercitation consectetur do anim magna nisi sunt. Dolore Lorem ea fugiat velit reprehenderit laboris incididunt cupidatat occaecat velit. Et aliqua nisi nisi amet et velit quis commodo culpa exercitation ad. Labore consectetur ullamco non aliqua ullamco sit do consequat esse nisi labore fugiat. Reprehenderit laboris esse qui laboris amet sint aliquip commodo.\r\n",
+{</br>
+    "guid": "6557159b-84e8-4651-a6b2-bc57f84c1a7e",</br>
+    "isActive": true,</br>
+    "age": 20,</br>
+    "name": "Singleton Craft",</br>
+    "gender": "male",</br>
+    "address": "413 Forrest Street, Lemoyne, Kentucky, 381",</br>
+    "company": null,</br>
+    "phone": "+1 (971) 407-3748",</br>
+    "isActiveEmployee": true,</br>
+    "description": "Occaecat exercitation consectetur do anim magna nisi sunt. Dolore Lorem ea fugiat velit reprehenderit laboris incididunt cupidatat occaecat velit. Et aliqua nisi nisi amet et velit quis commodo culpa exercitation ad. Labore consectetur ullamco non aliqua ullamco sit do consequat esse nisi labore fugiat. Reprehenderit laboris esse qui laboris amet sint aliquip commodo.\r\n",</br>
 }
 
 
