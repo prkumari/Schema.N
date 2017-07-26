@@ -29,11 +29,18 @@ namespace UnitTestProject
 			entityConversion.RegisterNewVersion(version1Info);
 			entityConversion.RegisterNewVersion(version2Info);
 
-			var v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jobjectV1);
-			var v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jobjectV2);
+			var v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jsonV1Text);
+			var v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jsonV2Text);
 
 			Assert.AreEqual(v1Entity.EntityType, typeof(PersonV1));
 			Assert.AreEqual(v2Entity.EntityType, typeof(PersonV2));
+
+			v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jobjectV1);
+			v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jobjectV2);
+
+			Assert.AreEqual(v1Entity.EntityType, typeof(PersonV1));
+			Assert.AreEqual(v2Entity.EntityType, typeof(PersonV2));
+
 		}
 
 		[TestMethod]
