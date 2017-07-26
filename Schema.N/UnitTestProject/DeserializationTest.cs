@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
+using Schema.N;
 using System.Collections.Generic;
 using System.IO;
-using Schema.N;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
 using TestProject;
 
 namespace UnitTestProject
 {
-    [TestClass]
+	[TestClass]
     public class DeserializationTest
     {
         [TestMethod]
@@ -22,19 +21,8 @@ namespace UnitTestProject
 
 			var entityConversion = new JsonToEntityConversion();
 
-			var entityVersion1Matcher = new VersionMatcher
-			{
-				EntityVersion = 1,
-				EntityMatchesFunc = jObject => jObject.Value<int>("SchemanVersion") == 1,
-				Weight = 1
-			};
-
-			var entityVersion2Matcher = new VersionMatcher
-			{
-				EntityVersion = 2,
-				EntityMatchesFunc = jObject => jObject.Value<int>("SchemanVersion") == 2,
-				Weight = 2
-			};
+	        var entityVersion1Matcher = new VersionMatcher(jObject => jObject.Value<int>("SchemanVersion") == 1, 1, 1);
+	        var entityVersion2Matcher = new VersionMatcher(jObject => jObject.Value<int>("SchemanVersion") == 2, 2, 2);
 
 			var version1Info = new NewPocoVersionInfo<PersonV1>(1, null, entityVersion1Matcher);
 			var version2Info = new NewPocoVersionInfo<PersonV2>(2, null, entityVersion2Matcher);

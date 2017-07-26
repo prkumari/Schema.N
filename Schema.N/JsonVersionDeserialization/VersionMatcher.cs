@@ -1,18 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
+using System;
 
 namespace Schema.N
 {
-    public class VersionMatcher : IVersionMatcher
+	public class VersionMatcher : IVersionMatcher
     {
-        public int EntityVersion { get; set; }
+		public VersionMatcher() {}
+
+		public VersionMatcher(Func<JObject, bool> entityMatchesFunc, int entityVersion, int weight)
+	    {
+		    EntityMatchesFunc = entityMatchesFunc;
+		    EntityVersion = entityVersion;
+		    Weight = weight;
+	    }
+
+		public Func<JObject, bool> EntityMatchesFunc { get; set; }
+
+		public int EntityVersion { get; set; }
 
         public int Weight { get; set; }
 
-        public Func<JObject, bool> EntityMatchesFunc { get; set; }
     }
 }
