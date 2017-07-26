@@ -26,7 +26,7 @@ namespace DocDbDemoClient
                 Console.WriteLine("Select from the Menu:");
                 Console.WriteLine("===========================");
                 Console.WriteLine("1. Reset Data");
-                Console.WriteLine("2. Update version1 Data");
+                Console.WriteLine("2. Upload version 1 Data");
                 Console.WriteLine("3. Upgrade from Version 1 to Version 2");
                 Console.WriteLine("Choose Option (1/2/3):");
                 var ch = Console.ReadLine();
@@ -63,7 +63,17 @@ namespace DocDbDemoClient
 
         private static async Task ClearTestDB()
         {
-            return;
+            // Hacky way to delete
+            var itemsV1 = await DocDbClient.GetItemsAsync<UserV1>(f => f.isActive || !f.isActive);
+            var itemsV2 = await DocDbClient.GetItemsAsync<UserV2>(f => f.isActive || !f.isActive);
+            foreach (var item in itemsV1.ToList())
+            {
+                await DocDbClient.DeleteItemAsync(item.id);
+            }
+            foreach (var item in itemsV2.ToList())
+            {
+                await DocDbClient.DeleteItemAsync(item.id);
+            }
         }
 
         public static async Task UploadTestDataToDocDb()
