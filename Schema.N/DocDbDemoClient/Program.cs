@@ -31,22 +31,23 @@ namespace DocDbDemoClient
             var pocoConverterV1V2 =
                 new JsonTransformerVersionNextConverter<UserV1, UserV2>(
                     new JsonTransformRule("about", JsonTransformRuleType.Rename, "description"),
-                    new JsonTransformRule("isActiveEmployee", JsonTransformRuleType.NewProperty),
+                    new JsonTransformRule("isActiveEmployee", JsonTransformRuleType.NewProperty, ""),
                     new JsonTransformRule("isActive", JsonTransformRuleType.CopyToken, "isActiveEmployee"),
-                    new JsonTransformRule("company", JsonTransformRuleType.NewProperty),
-                    new JsonTransformRule("email", JsonTransformRuleType.NewProperty),
+                    new JsonTransformRule("company", JsonTransformRuleType.NewProperty, ""),
+                    new JsonTransformRule("email", JsonTransformRuleType.NewProperty, ""),
                     new JsonTransformRule("eyeColor", JsonTransformRuleType.Delete),
                     new JsonTransformRule("SchemanVersion", JsonTransformRuleType.SetValue, 2));
 
             entityConversion.RegisterNewVersion(new NewPocoVersionInfo<UserV1>(1));
             entityConversion.RegisterNewVersion(new NewPocoVersionInfo<UserV2>(2, pocoConverterV1V2));
 
-            foreach (var user in users)
+            var upgradedVersionUsers = users.Select(user => 
+                entityConversion.DeserializeAndConvertToLatestVersion(user).RawDataObject as JObject).ToList();
+
+            /*foreach (var user in upgradedVersionUsers)
             {
-                var latestVersion = entityConversion.DeserializeAndConvertToLatestVersion(user);
-                var latestVersionUser = latestVersion.RawDataObject as JObject;
-                await DocDbClient.UpdateItemAsync(user["id"].ToString(), latestVersionUser);
-            }
+                await DocDbClient.UpdateItemAsync(user["id"].ToString(), user);
+            }*/
         }
     }
 }
