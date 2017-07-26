@@ -164,7 +164,14 @@ namespace Schema.N
 
             try
             {
-                result = value.ToString();
+                if (value.GetType() != typeof(string))
+                {
+                    result = value;
+                }
+                else
+                {
+                    result = value.ToString();
+                }
                 return result;
             }
             catch { }

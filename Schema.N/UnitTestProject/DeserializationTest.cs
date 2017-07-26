@@ -93,7 +93,7 @@ namespace UnitTestProject
             {
                 Operation = JsonTransformRuleType.SetValue,
                 TargetPath = "SchemanVersion",
-                Value = new { Test=1, Timestamp="01/01/1970"}
+                Value = new {Test=1, Timestamp="01/01/1970"}
             };
 
             var rules = new List<JsonTransformRule>();
