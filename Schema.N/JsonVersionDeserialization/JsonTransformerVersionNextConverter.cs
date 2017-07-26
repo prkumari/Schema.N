@@ -11,6 +11,11 @@ namespace Schema.N
         /// </summary>
         public IJsonTransformer Transformer { get; set; }
 
+        public JsonTransformerVersionNextConverter(params JsonTransformRule[] rules)
+        {
+            Transformer = new JsonTransformer(rules);
+        }
+
         public JsonTransformerVersionNextConverter(IJsonTransformer transformer)
         {
             Transformer = transformer;

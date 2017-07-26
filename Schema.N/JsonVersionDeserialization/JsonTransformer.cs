@@ -36,7 +36,7 @@ namespace Schema.N
         {
             jTo.Merge(jFrom, new JsonMergeSettings
             {
-                MergeArrayHandling = MergeArrayHandling.Union,
+                MergeArrayHandling = MergeArrayHandling.Replace,
                 MergeNullValueHandling = MergeNullValueHandling.Merge
             });
 
@@ -46,7 +46,7 @@ namespace Schema.N
                 {
                     if (rule.Operation == JsonTransformRuleType.Rename)
                     {
-                        HandleRename(rule.TargetPath, rule.Value, jTo);
+                        HandleRename(rule.TargetPath, rule.Value.ToString(), jTo);
                     }
                     else if (rule.Operation == JsonTransformRuleType.Delete)
                     {
@@ -54,7 +54,15 @@ namespace Schema.N
                     }
                     else if (rule.Operation == JsonTransformRuleType.CopyToken)
                     {
-                        HandleCopy(rule.TargetPath, rule.Value, jTo);
+                        HandleCopy(rule.TargetPath, rule.Value.ToString(), jTo);
+                    }
+                    else if (rule.Operation == JsonTransformRuleType.NewProperty)
+                    {
+                        HandleNewProperty(rule.Value.ToString(), jTo, rule.TargetPath);
+                    }
+                    else if (rule.Operation == JsonTransformRuleType.SetValue)
+                    {
+                        HandleSetValue(rule.TargetPath, rule.Value, jTo);
                     }
                 }
             }
@@ -67,7 +75,7 @@ namespace Schema.N
             return jto;
         }
 
-        public void HandleRename(string target, string value, JObject model)
+        private void HandleRename(string target, string value, JObject model)
         {
             var tokens = model.SelectTokens(target);
             foreach(var token in tokens)
@@ -80,7 +88,7 @@ namespace Schema.N
             }
         }
 
-        public void HandleDelete(string target, JObject model)
+        private void HandleDelete(string target, JObject model)
         {
             var tokens = model.SelectTokens(target);
             foreach (var token in tokens)
@@ -92,7 +100,7 @@ namespace Schema.N
             }
         }
 
-        public void HandleCopy(string target, string value, JObject model)
+        private void HandleCopy(string target, string value, JObject model)
         {
             var copyFrom = model.SelectToken(target);
             var copyTo = model.SelectToken(value);
@@ -110,6 +118,92 @@ namespace Schema.N
                 throw new InvalidOperationException("The parent is missing.");
 
             copyTo.Replace(copyFrom);
+        }
+
+        private void HandleNewProperty(string propertyname, JObject model, string targetpath = null)
+        {
+            JToken targetToken;
+            if(targetpath == null)
+            {
+                targetToken = model.Root;
+            }
+            else
+            {
+                targetToken = model.SelectToken(targetpath);
+            }
+
+            var newToken = new JProperty(propertyname, "");
+
+            var parent = targetToken.Parent;
+            if (parent == null) {
+                model.Add(newToken);
+            }   
+            else
+            {
+                var container = targetToken as JObject;
+                if (container != null)
+                {
+                    container.Add(newToken);
+                }
+            }
+        }
+
+        private void HandleSetValue(string target, object value, JObject model)
+        {
+            var token = model.SelectToken(target);
+
+            if (token != null)
+            {
+                dynamic jObj = ObtainValue(value);
+                if(jObj == null)
+                {
+                    throw new ArgumentException("Could not translate value!");
+                }
+
+                var parent = token.Parent;
+                if (parent == null)
+                    throw new InvalidOperationException("The parent is missing.");
+
+                var parentProp = parent as JProperty;
+                if (parentProp != null) {
+                    var newToken = new JProperty(parentProp.Name, jObj);
+                    parent.Replace(newToken);
+                }
+            }
+        }
+
+        private dynamic ObtainValue(object value)
+        {
+            dynamic result = null;
+            try
+            {
+                result = JObject.FromObject(value);
+                return result;
+            }
+            catch { }
+
+            try
+            {
+                result = JObject.Parse(value.ToString());
+                return result;
+            }
+            catch { }
+
+            try
+            {
+                if (value.GetType() != typeof(string))
+                {
+                    result = value;
+                }
+                else
+                {
+                    result = value.ToString();
+                }
+                return result;
+            }
+            catch { }
+
+            return result;
         }
     }
 }

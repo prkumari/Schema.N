@@ -15,62 +15,25 @@ namespace DemoProj1
         {
             var entityConversion = new JsonToEntityConversion();
 
-            var transform1 = new JsonTransformRule
-            {
-                TargetPath = "Id",
-                Operation = JsonTransformRuleType.Rename,
-                Value = "Identifier"
-            };
+            var pocoConverterV1V2 =
+                new JsonTransformerVersionNextConverter<FooV1, FooV2>(
+                    new JsonTransformRule("Id", JsonTransformRuleType.Rename, "Identifier"),
+                    new JsonTransformRule("Name", JsonTransformRuleType.Rename, "FirstName"),
+                    new JsonTransformRule("SchemanVersion", JsonTransformRuleType.SetValue, 2));
 
-            var transform2 = new JsonTransformRule
-            {
-                TargetPath = "Name",
-                Operation = JsonTransformRuleType.Rename,
-                Value = "FirstName"
-            };
+            var pocoConverterV2V3 =
+                new JsonTransformerVersionNextConverter<FooV2, FooV3>(
+                    new JsonTransformRule("Identifier", JsonTransformRuleType.Rename, "Id"),
+                    new JsonTransformRule("Description", JsonTransformRuleType.Delete),
+                    new JsonTransformRule("SchemanVersion", JsonTransformRuleType.SetValue, 3));
 
-            var transform3 = new JsonTransformRule
-            {
-                TargetPath = "Identifier",
-                Operation = JsonTransformRuleType.Rename,
-                Value = "Id"
-            };
-
-            var transform4 = new JsonTransformRule
-            {
-                TargetPath = "Description",
-                Operation = JsonTransformRuleType.Delete
-            };
-
-            var transformerV1V2 = new JsonTransformer(transform1, transform2);
-            var transformerV2V3 = new JsonTransformer(transform3, transform4);
-            var pocoConverterV1V2 = new JsonTransformerVersionNextConverter<FooV1, FooV2>(transformerV1V2);
-            var pocoConverterV2V3 = new JsonTransformerVersionNextConverter<FooV2, FooV3>(transformerV2V3);
-
-            var version1Info = new NewPocoVersionInfo<FooV1>
-            {
-                NextVersion = 1
-            };
-
-            var version2Info = new NewPocoVersionInfo<FooV2>()
-            {
-                NextVersion = 2,
-                ToNextVersionConverter = pocoConverterV1V2
-            };
-
-            var version3Info = new NewPocoVersionInfo<FooV2>()
-            {
-                NextVersion = 3,
-                ToNextVersionConverter = pocoConverterV2V3
-            };
-
-            entityConversion.RegisterNewVersion(version1Info);
-            entityConversion.RegisterNewVersion(version2Info);
-            entityConversion.RegisterNewVersion(version3Info);
+            entityConversion.RegisterNewVersion(new NewPocoVersionInfo<FooV1>(1));
+            entityConversion.RegisterNewVersion(new NewPocoVersionInfo<FooV2>(2, pocoConverterV1V2));
+            entityConversion.RegisterNewVersion(new NewPocoVersionInfo<FooV3>(3, pocoConverterV2V3));
 
             var sampleFoo = GetSampleFooV1();
             var finalResult = entityConversion.DeserializeAndConvertToLatestVersion(sampleFoo);
-
+            var finalPoco = entityConversion.DeserializeJsonToCurrentVersion(finalResult.RawDataObject as JObject);
         }
 
         private static JObject GetSampleFooV1()

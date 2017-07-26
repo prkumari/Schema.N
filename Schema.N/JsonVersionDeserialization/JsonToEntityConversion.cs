@@ -60,7 +60,7 @@ namespace Schema.N
             VersionToDeserializerRegistry[id] = new DefaultEntityVersionDeserialization<TEntity>();
         }
 
-        public object DeserializeAndConvertToLatestVersion(JObject json)
+        public IDataVersionInfo DeserializeAndConvertToLatestVersion(JObject json)
         {
             var sortedVersions =
                 VersionConverters.Keys.SelectMany(t => new List<int> {t.Item1, t.Item2}).Distinct().OrderBy(k => k);
@@ -70,7 +70,6 @@ namespace Schema.N
             var curPoco = deserializeResponse.Entity;
             var nextVersion = sortedVersions.OfType<int?>().FirstOrDefault(v => v > curVersion);
 
-            //IDataVersionInfo curData = new DataVersionInfo<JObject, TPocoStartType>(json, curPoco);
             IDataVersionInfo curData = new DataVersionInfoUgly<JObject>(json, curPoco, deserializeResponse.EntityType);
 
             while (nextVersion != null)
