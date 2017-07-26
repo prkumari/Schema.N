@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentDbClientLibrary", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoClient", "DemoProj1\DemoClient.csproj", "{8372742F-097A-4162-9A5A-76000A42A906}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocDbDemoClient", "DocDbDemoClient\DocDbDemoClient.csproj", "{55231A11-6BD1-493A-9DDA-27044DFB02DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{8372742F-097A-4162-9A5A-76000A42A906}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8372742F-097A-4162-9A5A-76000A42A906}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8372742F-097A-4162-9A5A-76000A42A906}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55231A11-6BD1-493A-9DDA-27044DFB02DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55231A11-6BD1-493A-9DDA-27044DFB02DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55231A11-6BD1-493A-9DDA-27044DFB02DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55231A11-6BD1-493A-9DDA-27044DFB02DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

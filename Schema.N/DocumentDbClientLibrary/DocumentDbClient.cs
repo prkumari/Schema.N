@@ -55,7 +55,7 @@ namespace DocumentDbClientLibrary
         {
             IDocumentQuery<T> query = _client.CreateDocumentQuery<T>(
                 UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId),
-                new FeedOptions { MaxItemCount = -1 })
+                new FeedOptions { MaxItemCount = -1, EnableCrossPartitionQuery = true })
                 .Where(predicate)
                 .AsDocumentQuery();
 
