@@ -59,7 +59,7 @@ namespace UnitTestProject
             var jsonV1Text = File.ReadAllText(@"PV1.txt");
             var jsonV2Text = File.ReadAllText(@"PV2.txt");
 
-            var jc = new JsonTransformer();
+            
             var r1 = new JsonTransformRule()
             {
                 Operation = JsonTransformRuleType.Rename,
@@ -82,7 +82,9 @@ namespace UnitTestProject
             rules.Add(r1);
             rules.Add(r2);
             rules.Add(r3);
-            var result = jc.ConvertTo(jsonV1Text, jsonV2Text, rules);
+
+            var jc = new JsonTransformer(rules);
+            var result = jc.ConvertTo(jsonV1Text, jsonV2Text);
             Assert.AreEqual("{\r\n  \"Id\": 1,\r\n  \"FirstName\": \"Priya\",\r\n  \"LastName\": " +
                 "\"Kumari\",\r\n  \"DoB\": \"1989-02-01\",\r\n  \"SchemanVersion\": 1,\r\n  \"Example\": " +
                 "\"Priya Kumari\"\r\n}", result);

@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AB6DC401-7C95-486A-841C-B05A36B014A3}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{8372742F-097A-4162-9A5A-76000A42A906}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Schema.N</RootNamespace>
-    <AssemblyName>Schema.N</AssemblyName>
+    <RootNamespace>DemoProj1</RootNamespace>
+    <AssemblyName>DemoProj1</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\..\CxCache\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -44,31 +47,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompositeVersionDetector.cs" />
-    <Compile Include="CustomVersionNextConverter.cs" />
-    <Compile Include="DataVersionInfo.cs" />
-    <Compile Include="DataVersionInfoUgly.cs" />
-    <Compile Include="IDataVersionInfo.cs" />
-    <Compile Include="DefaultEntityVersionDeserialization.cs" />
-    <Compile Include="DefaultEntityVersionDetector.cs" />
-    <Compile Include="IEntityVersionDeserialization.cs" />
-    <Compile Include="IEntityVersionDetector.cs" />
-    <Compile Include="IJsonTransformer.cs" />
-    <Compile Include="IVersionMatcher.cs" />
-    <Compile Include="IVersionNextConverterTypeless.cs" />
-    <Compile Include="IVersionResponseWrapper.cs" />
-    <Compile Include="JsonTransformer.cs" />
-    <Compile Include="JsonTransformerVersionNextConverter.cs" />
-    <Compile Include="JsonTransformRule.cs" />
-    <Compile Include="JsonToEntityConversion.cs" />
-    <Compile Include="NewPocoVersionInfo.cs" />
+    <Compile Include="FooV1.cs" />
+    <Compile Include="FooV2.cs" />
+    <Compile Include="FooV3.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VersionMatcher.cs" />
-    <Compile Include="AbstractVersionNextConverter.cs" />
-    <Compile Include="VersionResponseWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JsonVersionDeserialization\Schema.N.csproj">
+      <Project>{AB6DC401-7C95-486A-841C-B05A36B014A3}</Project>
+      <Name>Schema.N</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

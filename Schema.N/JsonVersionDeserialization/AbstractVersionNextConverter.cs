@@ -2,16 +2,9 @@
 
 namespace Schema.N
 {
-    public class AbstractVersionNextConverter<TRawData, TPocoThis, TPocoNext>  : IVersionNextConverterTypeless
+    public abstract class AbstractVersionNextConverter<TRawData, TPocoThis, TPocoNext>  : IVersionNextConverterTypeless
     {
-        public Func<DataVersionInfo<TRawData, TPocoThis>, DataVersionInfo<TRawData, TPocoNext>> ConversionFunc { get; set; }
-
-        public AbstractVersionNextConverter(
-            Func<DataVersionInfo<TRawData, TPocoThis>, DataVersionInfo<TRawData, TPocoNext>> conversionFunc)
-        {
-            ConversionFunc = conversionFunc;
-        }
-
+        
         public IDataVersionInfo ConvertToNext(IDataVersionInfo prevVersiondata)
         {
             if (prevVersiondata == null)
@@ -26,8 +19,11 @@ namespace Schema.N
             }
             var convertedPrev = new DataVersionInfo<TRawData, TPocoThis>((TRawData) prevVersiondata.RawDataObject,
                 (TPocoThis) prevVersiondata.PocoObject);
-            return ConversionFunc(convertedPrev);
+            return ConvertToNext(convertedPrev);
         }
+
+        protected abstract DataVersionInfo<TRawData, TPocoNext> ConvertToNext(
+            DataVersionInfo<TRawData, TPocoThis> convertedPrev);
 
         public Type GetRawDataType()
         {

@@ -13,21 +13,27 @@ namespace Schema.N
          
         private List<IVersionMatcher> VersionMatchers { get; set; }
 
-        public CompositeVersionDetector(List<IVersionMatcher> versionMatchers)
+        public CompositeVersionDetector()
         {
-            if (versionMatchers.GroupBy(v => v.EntityVersion).Any(g => g.Count() > 1))
+            VersionMatchers = new List<IVersionMatcher>();
+        }
+
+        // todo this must be called in the correct order.
+        public void AddVersionMatcher(IVersionMatcher matcher)
+        {
+            if (VersionMatchers.Any(m => m.EntityVersion == matcher.EntityVersion))
             {
                 throw new ArgumentException("Can not have multiple version matchers that reference the same version id.");
             }
 
-            // Sort them by rank so that we can iterate and return first success.
-            // Note: big should outrank small.
-            VersionMatchers = new List<IVersionMatcher>(versionMatchers.OrderByDescending(m => m.Weight));
+            VersionMatchers.Add(matcher);
         }
 
         public int GetEntityVersion(JObject json)
         {
-            foreach (var matcher in VersionMatchers)
+            var orderedMatchers = VersionMatchers.OrderBy(m => m.Weight);
+
+            foreach (var matcher in orderedMatchers)
             {
                 if (matcher.EntityMatchesFunc(json))
                 {
@@ -35,8 +41,20 @@ namespace Schema.N
                 }
             }
 
+            var defaultMatch = DefaultMatch(json);
+            if (defaultMatch.HasValue)
+            {
+                return defaultMatch.Value;
+            }
+
             // TODO better exception or perhaps ignore this bad boy, or better response type.
             throw new Exception("No version matcher matched this entity.");
+        }
+
+        private int? DefaultMatch(JObject json)
+        {
+            var schemanVersion = json.Value<int?>("SchemanVersion");
+            return schemanVersion;
         }
     }
 }

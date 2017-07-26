@@ -1,9 +1,16 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace Schema.N
 {
-    interface IJsonTransformer
+    public interface IJsonTransformer
     {
-        string ConvertTo(string from, string to, List<JsonTransformRule> rules=null);
+        string ConvertTo(string from, string to);
+
+        void ConvertTo(JObject from, JObject to);
+
+        JObject ConvertTo(JObject from);
+
+
     }
 }

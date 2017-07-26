@@ -1,26 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace Schema.N
 {
     public class JsonTransformer : IJsonTransformer
     {
-        public string ConvertTo(string from, string to, List<JsonTransformRule> rules=null)
+        public IReadOnlyList<JsonTransformRule> TransformRules => TransformRulesInternal;
+        private List<JsonTransformRule> TransformRulesInternal { get; }
+
+        public JsonTransformer(params JsonTransformRule[] rules) : this(rules.ToList())
+        {
+            
+        }
+
+        public JsonTransformer(List<JsonTransformRule> rules)
+        {
+            TransformRulesInternal = rules;
+        }
+
+        public string ConvertTo(string from, string to)
         {
             // 'from' values take precedence if they exist in 'to'
             var jFrom = JObject.Parse(from);
             var jTo = JObject.Parse(to);
 
+            ConvertTo(jFrom, jTo);
+
+
+            return jTo.ToString();
+        }
+
+        public void ConvertTo(JObject jFrom, JObject jTo)
+        {
             jTo.Merge(jFrom, new JsonMergeSettings
             {
                 MergeArrayHandling = MergeArrayHandling.Union,
                 MergeNullValueHandling = MergeNullValueHandling.Merge
             });
 
-            if (rules != null)
+            if (TransformRules != null)
             {
-                foreach (var rule in rules)
+                foreach (var rule in TransformRules)
                 {
                     if (rule.Operation == JsonTransformRuleType.Rename)
                     {
@@ -36,8 +58,13 @@ namespace Schema.N
                     }
                 }
             }
+        }
 
-            return jTo.ToString();
+        public JObject ConvertTo(JObject from)
+        {
+            var jto = new JObject();
+            ConvertTo(from, jto);
+            return jto;
         }
 
         public void HandleRename(string target, string value, JObject model)

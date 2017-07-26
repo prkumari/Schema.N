@@ -42,23 +42,83 @@ namespace TestProject
                 Weight = 2
             };
 
-            var versionDetector =
-                new CompositeVersionDetector(new List<IVersionMatcher> {entityVersion1Matcher, entityVersion2Matcher});
+            var entityVersion3Matcher = new VersionMatcher
+            {
+                EntityVersion = 3,
+                EntityMatchesFunc = jObject => jObject.Value<int>("SchemanVersion") == 3,
+                Weight = 3
+            };
 
             //entityConversion.VersionDetector = new DefaultEntityVersionDetector("SchemanVersion");
             //entityConversion.RegisterDeserializer("1", new DefaultEntityVersionDeserialization<PersonV1>());
             //entityConversion.RegisterDeserializer("2", new DefaultEntityVersionDeserialization<PersonV2>());
 
-            entityConversion.SetVersionDetector(versionDetector);
-            entityConversion.RegisterDefaultDeserializer<PersonV1>(1);
-            entityConversion.RegisterDefaultDeserializer<PersonV2>(2);
+            var transform1 = new JsonTransformRule
+            {
+                TargetPath = "Id",
+                Operation = JsonTransformRuleType.Rename,
+                Value = "Identifier"
+            };
 
-            entityConversion.RegisterVersionConversion<PersonV1, PersonV2>(1, 2, ConvertPersonV1ToV2);
-            entityConversion.RegisterVersionConversion<PersonV2, PersonV3>(2, 3, ConvertPersonV2ToV3);
+            var transform2 = new JsonTransformRule
+            {
+                TargetPath = "Name",
+                Operation = JsonTransformRuleType.Rename,
+                Value = "FirstName"
+            };
 
-            var v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jtokenV1);
+            var transform3 = new JsonTransformRule
+            {
+                TargetPath = "Identifier",
+                Operation = JsonTransformRuleType.Rename,
+                Value = "Id"
+            };
 
-            var finalResult = entityConversion.DeserializeAndConvertToLatestVersion(jtokenV1);
+            var transform4 = new JsonTransformRule
+            {
+                TargetPath = "Description",
+                Operation = JsonTransformRuleType.Delete
+            };
+
+            var transformerV1V2 = new JsonTransformer(transform1, transform2);
+            var transformerV2V3 = new JsonTransformer(transform3, transform4);
+            var pocoConverterV1V2 = new JsonTransformerVersionNextConverter<FooV1, FooV2>(transformerV1V2);
+            var pocoConverterV2V3 = new JsonTransformerVersionNextConverter<FooV2, FooV3>(transformerV2V3);
+
+            var version1Info = new NewPocoVersionInfo<FooV1>
+            {
+                NextVersion = 1,
+                NextVersionMatcher = entityVersion1Matcher
+            };
+
+            var version2Info = new NewPocoVersionInfo<FooV2>()
+            {
+                NextVersion = 2,
+                NextVersionMatcher = entityVersion2Matcher,
+                ToNextVersionConverter = pocoConverterV1V2
+            };
+
+            var version3Info = new NewPocoVersionInfo<FooV2>()
+            {
+                NextVersion = 3,
+                NextVersionMatcher = entityVersion3Matcher,
+                ToNextVersionConverter = pocoConverterV2V3
+            };
+
+            entityConversion.RegisterNewVersion(version1Info);
+            entityConversion.RegisterNewVersion(version2Info);
+            entityConversion.RegisterNewVersion(version3Info);
+
+            var foo1Poco = new FooV1
+            {
+                Id = 7,
+                Name = "Pat",
+                Description = "this is Pat."
+            };
+            var jObject123 = JObject.FromObject(foo1Poco);
+            jObject123["SchemanVersion"] = 1;
+
+            var finalResult = entityConversion.DeserializeAndConvertToLatestVersion(jObject123);
 
 
 

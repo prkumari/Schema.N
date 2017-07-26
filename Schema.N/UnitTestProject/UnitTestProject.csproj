@@ -65,9 +65,9 @@
       <Project>{AB6DC401-7C95-486A-841C-B05A36B014A3}</Project>
       <Name>Schema.N</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TestProject\TestProject.csproj">
+    <ProjectReference Include="..\TestProject\MessingAround.csproj">
       <Project>{148BACC3-501A-4DA8-8AB1-E19F6D9B1451}</Project>
-      <Name>TestProject</Name>
+      <Name>MessingAround</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

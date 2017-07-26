@@ -54,6 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FooV3.cs" />
+    <Compile Include="FooV1.cs" />
+    <Compile Include="FooV2.cs" />
     <Compile Include="PersonV1.cs" />
     <Compile Include="PersonV2.cs" />
     <Compile Include="PersonV3.cs" />

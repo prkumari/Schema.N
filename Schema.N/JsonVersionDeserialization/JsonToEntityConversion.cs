@@ -9,7 +9,7 @@ namespace Schema.N
     {
         public IReadOnlyDictionary<int, IEntityVersionDeserialization> ReadOnlyVersionToDeserializerRegistry => VersionToDeserializerRegistry;
 
-        public IEntityVersionDetector VersionDetector { get; set; }
+        private CompositeVersionDetector VersionDetector { get; set; }
 
         private Dictionary<int, IEntityVersionDeserialization> VersionToDeserializerRegistry { get; }
 
@@ -17,31 +17,47 @@ namespace Schema.N
 
         public JsonToEntityConversion()
         {
-            VersionDetector = new DefaultEntityVersionDetector("SchemanVersion");
+            VersionDetector = new CompositeVersionDetector();
             VersionToDeserializerRegistry = new Dictionary<int, IEntityVersionDeserialization>();
             VersionConverters = new Dictionary<Tuple<int, int>, IVersionNextConverterTypeless>();
         }
 
-        public void RegisterVersionConversion<TPocoThis, TPocoNext>(int startVersion, int endVersion,
-            Func<DataVersionInfo<JObject, TPocoThis>, DataVersionInfo<JObject, TPocoNext>> conversionFunc)
+        public void RegisterNewVersion<TPoco>(NewPocoVersionInfo<TPoco> versionInfo)
         {
-            VersionConverters[Tuple.Create(startVersion, endVersion)] =
-                new AbstractVersionNextConverter<JObject, TPocoThis, TPocoNext>(conversionFunc);
+            if (versionInfo.NextVersionMatcher != null)
+            {
+                VersionDetector.AddVersionMatcher(versionInfo.NextVersionMatcher);
+            }
+
+            if (versionInfo.ToNextVersionConverter != null)
+            {
+                RegisterVersionConverter(versionInfo.NextVersion - 1, versionInfo.NextVersion, versionInfo.ToNextVersionConverter);
+            }
+
+            if (versionInfo.NextVersionDeserializer == null)
+            {
+                RegisterDefaultDeserializer<TPoco>(versionInfo.NextVersion);
+            }
+            else
+            {
+                RegisterDeserializer(versionInfo.NextVersion, versionInfo.NextVersionDeserializer);
+            }
         }
 
-        public void RegisterDeserializer(int id, IEntityVersionDeserialization deserializer)
+        private void RegisterVersionConverter(int startVersion, int endVersion,
+            IVersionNextConverterTypeless converter)
         {
-            VersionToDeserializerRegistry[id] = deserializer;
+            VersionConverters[Tuple.Create(startVersion, endVersion)] = converter;
         }
 
-        public void RegisterDefaultDeserializer<TEntity>(int id)
+        private void RegisterDeserializer(int version, IEntityVersionDeserialization deserializer)
+        {
+            VersionToDeserializerRegistry[version] = deserializer;
+        }
+
+        private void RegisterDefaultDeserializer<TEntity>(int id)
         {
             VersionToDeserializerRegistry[id] = new DefaultEntityVersionDeserialization<TEntity>();
-        }
-
-        public void SetVersionDetector(IEntityVersionDetector versionDetector)
-        {
-            VersionDetector = versionDetector;
         }
 
         public object DeserializeAndConvertToLatestVersion(JObject json)
@@ -67,7 +83,7 @@ namespace Schema.N
 
                 var converter = VersionConverters[versionTuple];
                 curData = converter.ConvertToNext(curData);
-                curVersion = nextVersion.Value;
+                 curVersion = nextVersion.Value;
                 // TODO inefficient
                 nextVersion = sortedVersions.OfType<int?>().FirstOrDefault(v => v > curVersion);
             }
