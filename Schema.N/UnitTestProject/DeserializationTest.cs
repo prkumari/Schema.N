@@ -70,22 +70,46 @@ namespace UnitTestProject
             {
                 Operation = JsonTransformRuleType.CopyToken,
                 TargetPath = "awesome",
-                Value = "Example"
+                Value = "SchemanVersion"
             };
             var r3 = new JsonTransformRule()
             {
                 Operation = JsonTransformRuleType.Delete,
                 TargetPath = "awesome",
             };
+            var r4 = new JsonTransformRule()
+            {
+                Operation = JsonTransformRuleType.NewProperty,
+                TargetPath = "Example",
+                Value = "AGoodProperty"
+            };
+            var r5 = new JsonTransformRule()
+            {
+                Operation = JsonTransformRuleType.SetValue,
+                TargetPath = "Example.AGoodProperty",
+                Value = "AGoodValue"
+            };
+            var r6 = new JsonTransformRule()
+            {
+                Operation = JsonTransformRuleType.SetValue,
+                TargetPath = "SchemanVersion",
+                Value = new { Test=1, Timestamp="01/01/1970"}
+            };
 
             var rules = new List<JsonTransformRule>();
             rules.Add(r1);
             rules.Add(r2);
             rules.Add(r3);
+            rules.Add(r4);
+            rules.Add(r5);
+            rules.Add(r6);
+
             var result = jc.ConvertTo(jsonV1Text, jsonV2Text, rules);
-            Assert.AreEqual("{\r\n  \"Identifier\": 1,\r\n  \"FirstName\": \"Priya\",\r\n  \"LastName\": " +
-                "\"Kumari\",\r\n  \"DoB\": \"1989-02-01\",\r\n  \"SchemanVersion\": 1,\r\n  \"Example\": " +
-                "\"Priya Kumari\"\r\n}", result);
+            Assert.AreEqual("{\r\n  \"Id\": 1,\r\n  \"FirstName\": \"Priya\",\r\n  " +
+                "\"LastName\": \"Kumari\",\r\n  \"DoB\": \"1989-02-01\",\r\n  " +
+                "\"SchemanVersion\": {\r\n    \"Test\": 1,\r\n    " +
+                "\"Timestamp\": \"01/01/1970\"\r\n  },\r\n  " +
+                "\"Example\": {\r\n    \"AGoodProperty\": \"AGoodValue\"\r\n  }\r\n}", result);
         }
 
         [TestMethod]
