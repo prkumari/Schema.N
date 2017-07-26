@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,12 +20,60 @@ namespace DocDbDemoClient
             var collection = ConfigurationManager.AppSettings["collection"];
             DocDbClient = new DocumentDbClient(endpoint, authKey, database, collection);
 
-            Task.Run(async () => await TestVersionUpgradeInDocDb()).Wait();
+            while (true)
+            {
+                Console.WriteLine("===========================");
+                Console.WriteLine("Select from the Menu:");
+                Console.WriteLine("===========================");
+                Console.WriteLine("1. Reset Data");
+                Console.WriteLine("2. Update version1 Data");
+                Console.WriteLine("3. Upgrade from Version 1 to Version 2");
+                Console.WriteLine("Choose Option (1/2/3):");
+                var ch = Console.ReadLine();
+                try
+                {
+                    switch (ch)
+                    {
+                        case "1":
+                            Task.Run(async () => await ClearTestDB()).Wait();
+                            break;
+                        case "2":
+                            Task.Run(async () => await UploadTestDataToDocDb()).Wait();
+                            break;
+                        case "3":
+                            Task.Run(async () => await TestVersionUpgradeInDocDb()).Wait();
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("================= Exception Occurred!! ===================");
+                    Console.WriteLine(e.Message + " StackTrace: " + e.StackTrace);
+                    Console.WriteLine("==========================================================");
+                }
+                Console.WriteLine("Continue? Press y to continue / Press any other key to exit ");
+                ch = Console.ReadLine();
+                if (string.Compare(ch, "y", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    continue;
+                }
+                return;
+            }            
+        }
+
+        private static async Task ClearTestDB()
+        {
+            return;
+        }
+
+        public static async Task UploadTestDataToDocDb()
+        {
+            return;
         }
 
         private static async Task TestVersionUpgradeInDocDb()
         {
-            var items = await DocDbClient.GetItemsAsync<UserV1>(f => f.isActive || !f.isActive);
+            var items = await DocDbClient.GetItemsAsync<UserV1>(f => f.SchemanVersion == 1);
             var users = items.ToList().Select(user => JObject.FromObject(user)).ToList();
             var entityConversion = new JsonToEntityConversion();
 
@@ -44,10 +93,10 @@ namespace DocDbDemoClient
             var upgradedVersionUsers = users.Select(user => 
                 entityConversion.DeserializeAndConvertToLatestVersion(user).RawDataObject as JObject).ToList();
 
-            /*foreach (var user in upgradedVersionUsers)
+            foreach (var user in upgradedVersionUsers)
             {
                 await DocDbClient.UpdateItemAsync(user["id"].ToString(), user);
-            }*/
+            }
         }
     }
 }
