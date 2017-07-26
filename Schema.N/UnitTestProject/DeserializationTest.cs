@@ -59,42 +59,13 @@ namespace UnitTestProject
             var jsonV1Text = File.ReadAllText(@"PV1.txt");
             var jsonV2Text = File.ReadAllText(@"PV2.txt");
 
-            
-            var r1 = new JsonTransformRule()
-            {
-                Operation = JsonTransformRuleType.Rename,
-                TargetPath = "Name",
-                Value = "awesome"
-            };
-            var r2 = new JsonTransformRule()
-            {
-                Operation = JsonTransformRuleType.CopyToken,
-                TargetPath = "awesome",
-                Value = "SchemanVersion"
-            };
-            var r3 = new JsonTransformRule()
-            {
-                Operation = JsonTransformRuleType.Delete,
-                TargetPath = "awesome",
-            };
-            var r4 = new JsonTransformRule()
-            {
-                Operation = JsonTransformRuleType.NewProperty,
-                TargetPath = "Example",
-                Value = "AGoodProperty"
-            };
-            var r5 = new JsonTransformRule()
-            {
-                Operation = JsonTransformRuleType.SetValue,
-                TargetPath = "Example.AGoodProperty",
-                Value = "AGoodValue"
-            };
-            var r6 = new JsonTransformRule()
-            {
-                Operation = JsonTransformRuleType.SetValue,
-                TargetPath = "SchemanVersion",
-                Value = new {Test=1, Timestamp="01/01/1970"}
-            };
+
+	        var r1 = new JsonTransformRule("Name", JsonTransformRuleType.Rename, "awesome");
+	        var r2 = new JsonTransformRule("awesome", JsonTransformRuleType.CopyToken, "SchemanVersion");
+	        var r3 = new JsonTransformRule("awesome", JsonTransformRuleType.Delete);
+	        var r4 = new JsonTransformRule("Example", JsonTransformRuleType.NewProperty, "AGoodProperty");
+	        var r5 = new JsonTransformRule("Example.AGoodProperty", JsonTransformRuleType.SetValue, "AGoodValue");
+	        var r6 = new JsonTransformRule("SchemanVersion", JsonTransformRuleType.SetValue, new { Test = 1, Timestamp = "01/01/1970" });
 
             var rules = new List<JsonTransformRule>();
             rules.Add(r1);
@@ -106,7 +77,7 @@ namespace UnitTestProject
 
             var jc = new JsonTransformer(rules);
 
-            var result = jc.ConvertTo(jsonV1Text, jsonV2Text);
+            string result = jc.ConvertTo(jsonV1Text, jsonV2Text);
             Assert.AreEqual("{\r\n  \"Identifier\": 1,\r\n  \"FirstName\": " +
                 "\"Priya\",\r\n  \"LastName\": \"Kumari\",\r\n  \"DoB\": " +
                 "\"1989-02-01\",\r\n  \"SchemanVersion\": {\r\n    " +
@@ -120,18 +91,8 @@ namespace UnitTestProject
             var jsonV1Text = File.ReadAllText(@"UserV1.txt");
             var jsonV2Text = File.ReadAllText(@"UserV2.txt");
 
-            var r1 = new JsonTransformRule()
-            {
-                Operation = JsonTransformRuleType.Rename,
-                TargetPath = "about",
-                Value = "description"
-            };
-            var r3 = new JsonTransformRule()
-            {
-                Operation = JsonTransformRuleType.Delete,
-                TargetPath = "eyeColor",
-            };
-
+	        var r1 = new JsonTransformRule("about", JsonTransformRuleType.Rename, "description");
+	        var r3 = new JsonTransformRule("eyeColor", JsonTransformRuleType.Delete);
             var rules = new List<JsonTransformRule>();
             rules.Add(r1);
             rules.Add(r3);

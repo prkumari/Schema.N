@@ -53,57 +53,18 @@ namespace TestProject
             //entityConversion.RegisterDeserializer("1", new DefaultEntityVersionDeserialization<PersonV1>());
             //entityConversion.RegisterDeserializer("2", new DefaultEntityVersionDeserialization<PersonV2>());
 
-            var transform1 = new JsonTransformRule
-            {
-                TargetPath = "Id",
-                Operation = JsonTransformRuleType.Rename,
-                Value = "Identifier"
-            };
-
-            var transform2 = new JsonTransformRule
-            {
-                TargetPath = "Name",
-                Operation = JsonTransformRuleType.Rename,
-                Value = "FirstName"
-            };
-
-            var transform3 = new JsonTransformRule
-            {
-                TargetPath = "Identifier",
-                Operation = JsonTransformRuleType.Rename,
-                Value = "Id"
-            };
-
-            var transform4 = new JsonTransformRule
-            {
-                TargetPath = "Description",
-                Operation = JsonTransformRuleType.Delete
-            };
-
-            var transformerV1V2 = new JsonTransformer(transform1, transform2);
-            var transformerV2V3 = new JsonTransformer(transform3, transform4);
+	        var rule1 = new JsonTransformRule("Id", JsonTransformRuleType.Rename, "Identifier");
+	        var rule2 = new JsonTransformRule("Name", JsonTransformRuleType.Rename, "FirstName");
+	        var rule3 = new JsonTransformRule("Identifier", JsonTransformRuleType.Rename, "Id");
+	        var rule4 = new JsonTransformRule("Description", JsonTransformRuleType.Delete);
+            var transformerV1V2 = new JsonTransformer(rule1, rule2);
+            var transformerV2V3 = new JsonTransformer(rule3, rule4);
             var pocoConverterV1V2 = new JsonTransformerVersionNextConverter<FooV1, FooV2>(transformerV1V2);
             var pocoConverterV2V3 = new JsonTransformerVersionNextConverter<FooV2, FooV3>(transformerV2V3);
 
-            var version1Info = new NewPocoVersionInfo<FooV1>
-            {
-                NextVersion = 1,
-                NextVersionMatcher = entityVersion1Matcher
-            };
-
-            var version2Info = new NewPocoVersionInfo<FooV2>()
-            {
-                NextVersion = 2,
-                NextVersionMatcher = entityVersion2Matcher,
-                ToNextVersionConverter = pocoConverterV1V2
-            };
-
-            var version3Info = new NewPocoVersionInfo<FooV2>()
-            {
-                NextVersion = 3,
-                NextVersionMatcher = entityVersion3Matcher,
-                ToNextVersionConverter = pocoConverterV2V3
-            };
+	        var version1Info = new NewPocoVersionInfo<FooV1>(1, null, entityVersion1Matcher);
+	        var version2Info = new NewPocoVersionInfo<FooV2>(2, pocoConverterV1V2, entityVersion2Matcher);
+	        var version3Info = new NewPocoVersionInfo<FooV2>(3, pocoConverterV2V3, entityVersion3Matcher);
 
             entityConversion.RegisterNewVersion(version1Info);
             entityConversion.RegisterNewVersion(version2Info);
