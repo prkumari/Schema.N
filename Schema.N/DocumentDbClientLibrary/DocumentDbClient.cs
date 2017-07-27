@@ -80,7 +80,7 @@ namespace DocumentDbClientLibrary
 
         public async Task DeleteItemAsync(string id)
         {
-            await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id));
+            await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id), new RequestOptions() {PartitionKey = new PartitionKey(id)});
         }
     }
 }
