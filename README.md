@@ -68,40 +68,38 @@ We want to upgrade the schema from Version 1 to Version 2:
 
 #### Following are the specific changes needs to happen during upgrade:
 
-1. Add new Keys: company, email, phone
+1. Add new Keys: company, email
 2. Rename Keys: about becomes description
 3. Copy values to another new key: IsActive to IsActiveEmployee
 4. Delete Keys: eyeColor
 
+Using DocumentDB as a client to test the version migration.
 
 ### Sample Code Snippet:
-		public void VersionDeserialize()
-        	{
-			string jsonV1Text = File.ReadAllText(@"PV1.txt");
-			string jsonV2Text = File.ReadAllText(@"PV2.txt");
+	private static async Task TestVersionUpgradeInDocDb()
+        {
+            var items = await DocDbClient.GetItemsAsync<UserV1>(f => f.SchemanVersion == 1);
+            var users = items.ToList().Select(user => JObject.FromObject(user)).ToList();
+            var entityConversion = new JsonToEntityConversion();
 
-			var jobjectV1 = JObject.Parse(jsonV1Text);
-			var jobjectV2 = JObject.Parse(jsonV2Text);
+            var pocoConverterV1V2 =
+                new JsonTransformerVersionNextConverter<UserV1, UserV2>(
+                    new JsonTransformRule("about", JsonTransformRuleType.Rename, "description"),
+                    new JsonTransformRule("isActiveEmployee", JsonTransformRuleType.NewProperty),
+                    new JsonTransformRule("isActive", JsonTransformRuleType.CopyToken, "isActiveEmployee"),
+                    new JsonTransformRule("company", JsonTransformRuleType.NewProperty),
+                    new JsonTransformRule("email", JsonTransformRuleType.NewProperty),
+                    new JsonTransformRule("eyeColor", JsonTransformRuleType.Delete),
+                    new JsonTransformRule("SchemanVersion", JsonTransformRuleType.SetValue, 2));
 
-			var entityConversion = new JsonToEntityConversion();
+            entityConversion.RegisterNewVersion(new NewPocoVersionInfo<UserV1>(1));
+            entityConversion.RegisterNewVersion(new NewPocoVersionInfo<UserV2>(2, pocoConverterV1V2));
 
-	        	var entityVersion1Matcher = new VersionMatcher(jObject => jObject.Value<int>("SchemanVersion") == 1, 1, 1);
-	        	var entityVersion2Matcher = new VersionMatcher(jObject => jObject.Value<int>("SchemanVersion") == 2, 2, 2);
+            var upgradedVersionUsers = users.Select(user => 
+                entityConversion.DeserializeAndConvertToLatestVersion(user).RawDataObject as JObject).ToList();
 
-			var version1Info = new NewPocoVersionInfo<PersonV1>(1, null, entityVersion1Matcher);
-			var version2Info = new NewPocoVersionInfo<PersonV2>(2, null, entityVersion2Matcher);
-			entityConversion.RegisterNewVersion(version1Info);
-			entityConversion.RegisterNewVersion(version2Info);
-
-			var v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jsonV1Text);
-			var v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jsonV2Text);
-
-			Assert.AreEqual(v1Entity.EntityType, typeof(PersonV1));
-			Assert.AreEqual(v2Entity.EntityType, typeof(PersonV2));
-
-			v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jobjectV1);
-			v2Entity = entityConversion.DeserializeJsonToCurrentVersion(jobjectV2);
-
-			Assert.AreEqual(v1Entity.EntityType, typeof(PersonV1));
-			Assert.AreEqual(v2Entity.EntityType, typeof(PersonV2));
-		}
+            foreach (var user in upgradedVersionUsers)
+            {
+                await DocDbClient.UpdateItemAsync(user["id"].ToString(), user);
+            }
+        }
