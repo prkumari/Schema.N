@@ -104,5 +104,11 @@ namespace Schema.N
 
             return response;
         }
-    }
+
+	    public IVersionResponseWrapper<object> DeserializeJsonToCurrentVersion(string jsonObject)
+	    {
+			JObject jObject = JObject.Parse(jsonObject);
+		    return DeserializeJsonToCurrentVersion(jObject);
+	    }
+	}
 }

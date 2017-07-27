@@ -6,4 +6,8 @@
     "gender": "male",
     "address": "413 Forrest Street, Lemoyne, Kentucky, 381",
     "phone": "+1 (971) 407-3748",
+	"company": null,
+	"email": null,
+	"IsActiveEmployee": true,
+	"about": "Occaecat exercitation consectetur do anim magna nisi sunt. Dolore Lorem ea fugiat velit reprehenderit laboris incididunt cupidatat occaecat velit. Et aliqua nisi nisi amet et velit quis commodo culpa exercitation ad. Labore consectetur ullamco non aliqua ullamco sit do consequat esse nisi labore fugiat. Reprehenderit laboris esse qui laboris amet sint aliquip commodo.\r\n",
 }

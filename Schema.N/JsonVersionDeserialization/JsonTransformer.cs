@@ -20,11 +20,11 @@ namespace Schema.N
             TransformRulesInternal = rules;
         }
 
-        public string ConvertTo(string from, string to)
+        public string ConvertTo(string from, string to, JsonLoadSettings settings = null)
         {
             // 'from' values take precedence if they exist in 'to'
-            var jFrom = JObject.Parse(from);
-            var jTo = JObject.Parse(to);
+            var jFrom = JObject.Parse(from, settings);
+            var jTo = JObject.Parse(to, settings);
 
             ConvertTo(jFrom, jTo);
 
@@ -46,23 +46,27 @@ namespace Schema.N
                 {
                     if (rule.Operation == JsonTransformRuleType.Rename)
                     {
-                        HandleRename(rule.TargetPath, rule.Value.ToString(), jTo);
+                        HandleRename(rule.TargetKey, rule.Value.ToString(), jTo);
                     }
                     else if (rule.Operation == JsonTransformRuleType.Delete)
                     {
-                        HandleDelete(rule.TargetPath, jTo);
+                        HandleDelete(rule.TargetKey, jTo);
                     }
                     else if (rule.Operation == JsonTransformRuleType.CopyToken)
                     {
-                        HandleCopy(rule.TargetPath, rule.Value.ToString(), jTo);
+                        HandleCopy(rule.TargetKey, rule.Value.ToString(), jTo);
                     }
                     else if (rule.Operation == JsonTransformRuleType.NewProperty)
                     {
-                        HandleNewProperty(rule.Value.ToString(), jTo, rule.TargetPath);
+                        HandleNewProperty(rule.TargetKey, jTo, rule.Value as string);
                     }
                     else if (rule.Operation == JsonTransformRuleType.SetValue)
                     {
-                        HandleSetValue(rule.TargetPath, rule.Value, jTo);
+                        HandleSetValue(rule.TargetKey, rule.Value, jTo);
+                    }
+                    else if (rule.Operation == JsonTransformRuleType.Custom)
+                    {
+                        HandleCustomInvoke(rule.CustomMethod, jTo);
                     }
                 }
             }
@@ -73,6 +77,14 @@ namespace Schema.N
             var jto = new JObject();
             ConvertTo(from, jto);
             return jto;
+        }
+
+        private void HandleCustomInvoke(Action<JObject> custom, JObject model)
+        {
+            if (custom == null)
+                throw new ArgumentException("Custom Rule specified but action is null!");
+
+            custom.Invoke(model);
         }
 
         private void HandleRename(string target, string value, JObject model)
@@ -122,6 +134,11 @@ namespace Schema.N
 
         private void HandleNewProperty(string propertyname, JObject model, string targetpath = null)
         {
+            if(string.IsNullOrEmpty(propertyname))
+            {
+                throw new ArgumentException("Valid Property Name not provided!");
+            }
+
             JToken targetToken;
             if(targetpath == null)
             {
@@ -132,7 +149,7 @@ namespace Schema.N
                 targetToken = model.SelectToken(targetpath);
             }
 
-            var newToken = new JProperty(propertyname, "");
+            var newToken = new JProperty(propertyname, null);
 
             var parent = targetToken.Parent;
             if (parent == null) {
@@ -154,10 +171,14 @@ namespace Schema.N
 
             if (token != null)
             {
-                dynamic jObj = ObtainValue(value);
-                if(jObj == null)
+                dynamic jObj = null;
+                if (value != null)
                 {
-                    throw new ArgumentException("Could not translate value!");
+                    jObj = ObtainValue(value);
+                    if (jObj == null)
+                    {
+                        throw new ArgumentException("Could not translate value!");
+                    }
                 }
 
                 var parent = token.Parent;
