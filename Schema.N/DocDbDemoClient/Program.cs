@@ -67,21 +67,14 @@ namespace DocDbDemoClient
         {
             // Hacky way to delete
             var itemsV1 = await DocDbClient.GetItemsAsync<UserV1>(f => f.isActive || !f.isActive);
-            var itemsV2 = await DocDbClient.GetItemsAsync<UserV2>(f => f.isActive || !f.isActive);
             foreach (var item in itemsV1.ToList())
             {
                 await DocDbClient.DeleteItemAsync(item.id);
             }
-            try
+            var itemsV2 = await DocDbClient.GetItemsAsync<UserV2>(f => f.isActive || !f.isActive);
+            foreach (var item in itemsV2.ToList())
             {
-                foreach (var item in itemsV2.ToList())
-                {
-                    await DocDbClient.DeleteItemAsync(item.id);
-                }
-            }
-            catch (Exception e)
-            {
-                // Do nothing, all the resources has been already deleted.
+                await DocDbClient.DeleteItemAsync(item.id);
             }
         }
 
