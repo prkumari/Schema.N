@@ -72,9 +72,16 @@ namespace DocDbDemoClient
             {
                 await DocDbClient.DeleteItemAsync(item.id);
             }
-            foreach (var item in itemsV2.ToList())
+            try
             {
-                await DocDbClient.DeleteItemAsync(item.id);
+                foreach (var item in itemsV2.ToList())
+                {
+                    await DocDbClient.DeleteItemAsync(item.id);
+                }
+            }
+            catch (Exception e)
+            {
+                // Do nothing, all the resources has been already deleted.
             }
         }
 
