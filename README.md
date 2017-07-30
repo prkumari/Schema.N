@@ -11,35 +11,70 @@ Schema.N Project Philosophy:
 
 The Schema.N philosophy assumes that the dev writes a query to pull a JSON string from any data store (think Azure DocumentDB, Redis, MongoDB, CosmosDB, Azure Table Storage, Kusto, flat files, Apache Kafka, etcetera) into memory, then we detect the schema version of the JSON string, and deserialize into the .NET Data Transfer Object that corresponds to the schema version.
  
-## Sample method to migrate from old to new version
-	static void Foo()
-        {
-            var entityConversion = new JsonToEntityConversion();
+## Sample use case - deserialize JSON into the appropriate POCO
 
-            var pocoConverterV1V2 =
-                new JsonTransformerVersionNextConverter<FooV1, FooV2>(
-                    new JsonTransformRule("Id", JsonTransformRuleType.Rename, "Identifier"),
-                    new JsonTransformRule("Name", JsonTransformRuleType.Rename, "FirstName"),
-                    new JsonTransformRule("SchemanVersion", JsonTransformRuleType.SetValue, 2));
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Schema.N;
+using System;
 
-            var pocoConverterV2V3 =
-                new JsonTransformerVersionNextConverter<FooV2, FooV3>(
-                    new JsonTransformRule("Identifier", JsonTransformRuleType.Rename, "Id"),
-                    new JsonTransformRule("Description", JsonTransformRuleType.Delete),
-                    new JsonTransformRule("SchemanVersion", JsonTransformRuleType.SetValue, 3));
+namespace ConsoleApp1
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			string jsonV1 = "{ Foo: 5, Bar: 'Hello World' }";
 
-            entityConversion.RegisterNewVersion(new NewPocoVersionInfo<FooV1>(1));
-            entityConversion.RegisterNewVersion(new NewPocoVersionInfo<FooV2>(2, pocoConverterV1V2));
-            entityConversion.RegisterNewVersion(new NewPocoVersionInfo<FooV3>(3, pocoConverterV2V3));
+			//this works great (before you upgrade your app/service to version 2)
+			PocoV1 pocoV1 = JsonConvert.DeserializeObject<PocoV1>(jsonV1);
 
-            var sampleFoo = GetSampleFooV1();
-            var finalResult = entityConversion.DeserializeAndConvertToLatestVersion(sampleFoo);
-            var finalPoco = entityConversion.DeserializeJsonToCurrentVersion(finalResult.RawDataObject as JObject);
-        }
+			try
+			{
+				PocoV2 pocoV2 = JsonConvert.DeserializeObject<PocoV2>(jsonV1);
+				Console.WriteLine("This code is unreachable.");
+			}
+			catch (Newtonsoft.Json.JsonReaderException)
+			{
+				Console.WriteLine("Some JSON format changes cause runtime exceptions when parsing older JSON strings into the latest POCO.");
+			}
+			
+			var entityConversion = new JsonToEntityConversion();
+			JToken jToken;
+			//The absence of a "Version" property means we're dealing with version 1 JSON format.
+			var entityVersion1Matcher = new VersionMatcher(jObject => false == jObject.TryGetValue("Version", out jToken), 1, 1);
+			//If a "Version" attribute exists, and the value = 2, then we're dealing with a version 2 JSON format
+			var entityVersion2Matcher = new VersionMatcher(jObject => jObject.Value<int>("Version") == 2, 2, 2);
+			var version1Info = new NewPocoVersionInfo<PocoV1>(1, null, entityVersion1Matcher);
+			var version2Info = new NewPocoVersionInfo<PocoV2>(2, null, entityVersion2Matcher);
+			entityConversion.RegisterNewVersion(version1Info);
+			entityConversion.RegisterNewVersion(version2Info);
+			
+			var v1Entity = entityConversion.DeserializeJsonToCurrentVersion(jsonV1);
+			if(typeof(PocoV1) == v1Entity.EntityType)
+				Console.WriteLine("Schema.N succesfully determined the correct JSON format and deserialized into the correct .NET class (PocoV1)");
 
-## Sample Usecase:
+			//Output:
+			//Some JSON format changes cause runtime exceptions when parsing older JSON strings into the latest POCO.
+			//Schema.N succesfully determined the correct JSON format and deserialized into the correct .NET class (PocoV1)
+		}
+	}
 
-We want to upgrade the schema from Version 1 to Version 2:
+	public class PocoV1
+	{
+		public int Foo;
+		public string Bar;
+	}
+
+	public class PocoV2
+	{
+		public int Foo;
+		public int Bar;
+		public int version;
+	}
+}
+
+## Sample Usecase: Upgrade/Migrate JObject from Version 1 to Version 2:
 
 ### Version 1 Json Data:
 {</br>
